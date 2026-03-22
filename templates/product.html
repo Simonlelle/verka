@@ -8,22 +8,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="min-h-screen antialiased">
+<body class="min-h-screen antialiased product-page">
     {% include '_sidebar.html' %}
     <div class="page-shell">
         <div class="page-content page-content--spacious">
             <div class="wrap space-y-4">
-                <a href="/" class="back-link">← Back to marketplace</a>
+                <a href="/" class="back-link">Back to marketplace</a>
             </div>
 
             {% if error %}
-                <div class="error-box">Error: {{ error }}</div>
+                <div class="wrap"><div class="error-box">Error: {{ error }}</div></div>
             {% elif record %}
                 {% set f = record.fields %}
                 {% set seller_display = (seller_names|join(', ')) if seller_names and seller_names|length > 0 else (f.Seller if f.Seller else '-') %}
                 {% set condition_display = f.Condition if f.Condition else '-' %}
 
-                <section class="product-layout">
+                <section class="product-layout wrap">
                     <div class="product-media">
                         {% if f.Photo and f.Photo|length > 0 %}
                             {% set photo = f.Photo[0] %}
@@ -61,7 +61,7 @@
                     </div>
                 </section>
             {% else %}
-                <div class="error-box">Product is not available.</div>
+                <div class="wrap"><div class="error-box">Product is not available.</div></div>
             {% endif %}
             </div>
         </div>
