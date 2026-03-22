@@ -326,5 +326,37 @@ def product_action(record_id, action_type):
         submitted=False
     )
 
+
+@app.route('/product/<record_id>/message', methods=['GET', 'POST'])
+def message_seller(record_id):
+    try:
+        record, seller_names = _get_product_and_sellers(record_id)
+    except Exception as e:
+        return render_template('message_seller.html', error=str(e), record=None, seller_names=[]), 400
+
+    if request.method == 'POST':
+        full_name = (request.form.get('full_name') or '').strip()
+        email = (request.form.get('email') or '').strip()
+        message = (request.form.get('message') or '').strip()
+        if not full_name or not email:
+            return render_template(
+                'message_seller.html',
+                record=record,
+                seller_names=seller_names,
+                error='Name and email are required.',
+                submitted=False
+            ), 400
+        return render_template(
+            'message_seller.html',
+            record=record,
+            seller_names=seller_names,
+            submitted=True,
+            submitted_email=email,
+            submitted_name=full_name,
+            submitted_message=message
+        )
+
+    return render_template('message_seller.html', record=record, seller_names=seller_names, submitted=False)
+
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

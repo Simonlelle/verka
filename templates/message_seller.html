@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="verka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Message Seller – VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+
+  <!-- DaisyUI + Tailwind -->
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- VERKA global styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      background: #140302;
+      color: #ffffff;
+    }
+
+    /* ─── DaisyUI theme tokens matched to VERKA palette ─── */
+    [data-theme="verka"] {
+      --color-base-100: #280905;
+      --color-base-200: #1e0604;
+      --color-base-300: #140302;
+      --color-base-content: #ffffff;
+      --color-primary: #c82000;
+      --color-primary-content: #ffffff;
+      color-scheme: dark;
+    }
+
+    /* ─── Page shell overrides (full-height chat) ─── */
+    .page-shell {
+      overflow: hidden;
+      background: #280905;
+      height: calc(100vh - 34px);
+    }
+
+    .msg-page {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* ─── LEFT SIDEBAR ─── */
+    .msg-sidebar {
+      border-right: 1px solid rgba(255,255,255,0.07);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: #1e0604;
+    }
+
+    .msg-sidebar-img {
+      width: 100%;
+      height: 190px;
+      object-fit: cover;
+      flex-shrink: 0;
+      display: block;
+    }
+
+    .msg-sidebar-img-placeholder {
+      width: 100%;
+      height: 190px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #140302;
+      color: rgba(255,255,255,0.3);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+
+    .msg-sidebar-body {
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+      overflow-y: auto;
+    }
+
+    .msg-sidebar-category {
+      display: inline-flex;
+      align-items: center;
+      padding: 3px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.3);
+      color: rgba(255,255,255,0.5);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    .msg-sidebar-name {
+      font-family: 'Krona One', sans-serif;
+      font-size: 17px;
+      line-height: 1.2;
+      color: #fff;
+    }
+
+    .msg-sidebar-price {
+      font-size: 24px;
+      font-weight: 800;
+      color: #e63300;
+    }
+
+    .msg-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.07);
+    }
+
+    .msg-seller-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .msg-seller-avi {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: rgba(200,32,0,0.2);
+      border: 1px solid rgba(200,32,0,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .msg-seller-avi svg { width: 16px; height: 16px; color: rgba(255,255,255,0.65); }
+
+    .msg-seller-label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,0.32); margin-bottom: 2px; }
+    .msg-seller-name  { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.85); }
+
+    .msg-sidebar-actions {
+      margin-top: auto;
+      padding-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    .msg-sb-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 9px;
+      border-radius: 9px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      transition: all 0.15s ease;
+    }
+
+    .msg-sb-btn:hover { background: rgba(255,255,255,0.09); color: #fff; }
+    .msg-sb-btn svg   { width: 13px; height: 13px; }
+
+    /* ─── RIGHT: CHAT WINDOW ─── */
+    .msg-chat-window {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: #280905;
+    }
+
+    /* Topbar */
+    .msg-topbar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 22px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      background: rgba(255,255,255,0.02);
+      flex-shrink: 0;
+    }
+
+    .msg-topbar-avi {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: rgba(200,32,0,0.18);
+      border: 1px solid rgba(200,32,0,0.38);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .msg-topbar-avi svg { width: 18px; height: 18px; color: rgba(255,255,255,0.7); }
+
+    .msg-topbar-name { font-size: 14px; font-weight: 700; color: #fff; }
+    .msg-topbar-sub  { font-size: 11px; color: rgba(255,255,255,0.38); margin-top: 1px; }
+
+    .msg-online-dot {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #4ade80;
+      margin-right: 5px;
+    }
+
+    .msg-topbar-pill {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.09);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .msg-topbar-pill span { font-size: 12px; color: rgba(255,255,255,0.5); max-width: 130px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .msg-topbar-pill strong { font-size: 12px; color: #e63300; }
+
+    /* Scrollable chat area */
+    .msg-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 22px 22px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.09) transparent;
+    }
+
+    .msg-body::-webkit-scrollbar { width: 4px; }
+    .msg-body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.09); border-radius: 4px; }
+
+    /* ── DaisyUI chat bubble overrides ── */
+    .chat-bubble { font-size: 13px; line-height: 1.65; max-width: 70%; }
+
+    /* Seller (left) */
+    .chat-start .chat-bubble {
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.88);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    /* Buyer / user (right) */
+    .chat-end .chat-bubble {
+      background: #c82000;
+      color: #fff;
+    }
+
+    .chat-header { font-size: 12px; color: rgba(255,255,255,0.42); font-weight: 600; }
+    .chat-footer { font-size: 11px; color: rgba(255,255,255,0.28); }
+
+    /* System divider */
+    .msg-sys {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 14px 0 10px;
+    }
+
+    .msg-sys-line { flex: 1; height: 1px; background: rgba(255,255,255,0.06); }
+    .msg-sys-text { font-size: 11px; color: rgba(255,255,255,0.22); white-space: nowrap; padding: 0 6px; }
+
+    /* Success notice inside chat */
+    .msg-success-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 16px 18px;
+      margin-top: 8px;
+      border-radius: 14px;
+      background: rgba(74,222,128,0.07);
+      border: 1px solid rgba(74,222,128,0.18);
+    }
+
+    .msg-success-note-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(74,222,128,0.12);
+      border: 1px solid rgba(74,222,128,0.22);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+
+    .msg-success-note-icon svg { width: 18px; height: 18px; color: #4ade80; }
+
+    /* Quick reply chips */
+    .msg-quick {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      padding: 10px 22px 2px;
+      flex-shrink: 0;
+    }
+
+    .msg-chip {
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: rgba(255,255,255,0.6);
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .msg-chip:hover {
+      background: rgba(200,32,0,0.16);
+      border-color: rgba(200,32,0,0.38);
+      color: #fff;
+    }
+
+    /* Input row */
+    .msg-input-row {
+      display: flex;
+      gap: 9px;
+      align-items: flex-end;
+      padding: 12px 22px 18px;
+      border-top: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
+    }
+
+    .msg-input-wrap {
+      flex: 1;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 14px;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .msg-input-wrap:focus-within {
+      border-color: rgba(200,32,0,0.48);
+      box-shadow: 0 0 0 3px rgba(200,32,0,0.09);
+    }
+
+    .msg-textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      outline: none;
+      resize: none;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      padding: 11px 14px;
+      line-height: 1.5;
+      min-height: 42px;
+      max-height: 110px;
+      overflow-y: auto;
+    }
+
+    .msg-textarea::placeholder { color: rgba(255,255,255,0.2); }
+
+    .msg-send {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      border: none;
+      background: #c82000;
+      color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; flex-shrink: 0;
+      transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .msg-send:hover { background: #e63300; transform: translateY(-2px); box-shadow: 0 8px 18px rgba(200,32,0,0.3); }
+    .msg-send:active { transform: scale(0.95); }
+    .msg-send svg { width: 16px; height: 16px; }
+
+    /* ── DaisyUI modal tweaks ── */
+    .modal-box {
+      background: #1e0604 !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      border-radius: 18px !important;
+      max-width: 380px !important;
+    }
+
+    .modal-backdrop { background: rgba(0,0,0,0.6); }
+
+    .modal-field label {
+      display: block;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: rgba(255,255,255,0.38);
+      margin-bottom: 6px;
+    }
+
+    .modal-field input {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 11px 13px;
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .modal-field input:focus { border-color: rgba(200,32,0,0.5); }
+    .modal-field input::placeholder { color: rgba(255,255,255,0.2); }
+
+    /* Responsive */
+    @media (max-width: 860px) {
+      .msg-page { grid-template-columns: 1fr; }
+      .msg-sidebar { display: none; }
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+
+    {% if not record %}
+      <div class="wrap py-8">
+        <div class="error-box">{{ error or 'Product not found.' }}</div>
+        <div class="links mt-4"><a class="link-btn" href="/">Back to homepage</a></div>
+      </div>
+
+    {% else %}
+      {% set f = record.fields %}
+      {% set seller_display = (seller_names|join(', ')) if seller_names and seller_names|length > 0 else (f.Seller if f.Seller else 'Seller') %}
+
+      <div class="msg-page">
+
+        <!-- ══ LEFT: product sidebar ══ -->
+        <aside class="msg-sidebar">
+          {% if f.Photo and f.Photo|length > 0 %}
+            {% set photo = f.Photo[0] %}
+            <img class="msg-sidebar-img"
+              src="{{ photo.thumbnails.large.url if photo.thumbnails and photo.thumbnails.large else photo.url }}"
+              alt="{{ f.Name or 'Product' }}">
+          {% else %}
+            <div class="msg-sidebar-img-placeholder">No image</div>
+          {% endif %}
+
+          <div class="msg-sidebar-body">
+            {% if f.Category %}
+              <span class="msg-sidebar-category">{{ f.Category }}</span>
+            {% endif %}
+            <h2 class="msg-sidebar-name">{{ f.Name or 'Untitled product' }}</h2>
+            {% if f.Price is not none %}
+              <div class="msg-sidebar-price">{{ f.Price }}€</div>
+            {% endif %}
+
+            <div class="msg-divider"></div>
+
+            <div class="msg-seller-row">
+              <div class="msg-seller-avi">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="8" r="4"/>
+                  <path d="M5 20c1.6-3.1 4.1-5 7-5s5.4 1.9 7 5"/>
+                </svg>
+              </div>
+              <div>
+                <div class="msg-seller-label">Seller</div>
+                <div class="msg-seller-name">{{ seller_display }}</div>
+              </div>
+            </div>
+
+            {% if f.Condition %}
+              <div style="font-size:12px; color:rgba(255,255,255,0.42);">
+                Condition: <span style="color:rgba(255,255,255,0.72);">{{ f.Condition }}</span>
+              </div>
+            {% endif %}
+
+            {% if f.Description %}
+              <p style="font-size:12px; color:rgba(255,255,255,0.42); line-height:1.65;">
+                {{ f.Description | truncate(110) }}
+              </p>
+            {% endif %}
+
+            <div class="msg-sidebar-actions">
+              <a href="{{ url_for('product_action', record_id=record.id, action_type='offer') }}" class="msg-sb-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                Make an offer
+              </a>
+              <a href="{{ url_for('product_page', record_id=record.id) }}" class="msg-sb-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m15 18-6-6 6-6"/></svg>
+                Back to product
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- ══ RIGHT: chat window ══ -->
+        <div class="msg-chat-window">
+
+          <!-- Topbar -->
+          <div class="msg-topbar">
+            <div class="msg-topbar-avi">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M5 20c1.6-3.1 4.1-5 7-5s5.4 1.9 7 5"/>
+              </svg>
+            </div>
+            <div>
+              <div class="msg-topbar-name">{{ seller_display }}</div>
+              <div class="msg-topbar-sub"><span class="msg-online-dot"></span>Usually replies within a few hours</div>
+            </div>
+            <div class="msg-topbar-pill">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>
+              <span>{{ f.Name or 'Product' }}</span>
+              {% if f.Price is not none %}<strong>{{ f.Price }}€</strong>{% endif %}
+            </div>
+          </div>
+
+          <!-- Chat body -->
+          <div class="msg-body" id="chatBody">
+
+            <div class="msg-sys">
+              <div class="msg-sys-line"></div>
+              <span class="msg-sys-text">Conversation about "{{ f.Name or 'this item' }}"</span>
+              <div class="msg-sys-line"></div>
+            </div>
+
+            <!-- Seller intro bubble -->
+            <div class="chat chat-start">
+              <div class="chat-header">
+                {{ seller_display }}
+                <time class="text-xs opacity-50">Just now</time>
+              </div>
+              <div class="chat-bubble">
+                Hi! Thanks for your interest in <strong>{{ f.Name or 'this item' }}</strong>.
+                {% if f.Price is not none %} It's listed at <strong>{{ f.Price }}€</strong>.{% endif %}
+                Feel free to ask me anything!
+              </div>
+              <div class="chat-footer opacity-50">Delivered</div>
+            </div>
+
+            {% if submitted %}
+              <!-- User's message shown as a chat bubble -->
+              <div class="chat chat-end">
+                <div class="chat-header">
+                  You
+                  <time class="text-xs opacity-50">Just now</time>
+                </div>
+                <div class="chat-bubble">
+                  {{ submitted_message if submitted_message else 'Hi, I am interested in this item.' }}
+                </div>
+                <div class="chat-footer opacity-50">Sent</div>
+              </div>
+
+              <div class="msg-sys">
+                <div class="msg-sys-line"></div>
+                <span class="msg-sys-text">Message delivered</span>
+                <div class="msg-sys-line"></div>
+              </div>
+
+              <div class="msg-success-note">
+                <div class="msg-success-note-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+                <div>
+                  <div style="font-size:13px; font-weight:700; color:#fff; margin-bottom:3px;">Sent to {{ seller_display }}</div>
+                  <div style="font-size:12px; color:rgba(255,255,255,0.45); line-height:1.6;">
+                    They'll reply to <strong style="color:rgba(255,255,255,0.72);">{{ submitted_email }}</strong>. Keep an eye on your inbox!
+                  </div>
+                  <div style="margin-top: 12px; display: flex; gap: 8px; flex-wrap: wrap;">
+                    <a href="{{ url_for('product_page', record_id=record.id) }}" class="link-btn">← Back to product</a>
+                    <a href="{{ url_for('explore') }}" class="link-btn">Browse more</a>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+
+          </div><!-- /chatBody -->
+
+          {% if not submitted %}
+            <!-- Quick reply chips -->
+            <div class="msg-quick" id="quickReplies">
+              <button type="button" class="msg-chip" data-text="Is this item still available?">Still available?</button>
+              <button type="button" class="msg-chip" data-text="Would you accept a lower price?">Negotiate price</button>
+              <button type="button" class="msg-chip" data-text="Can you share more photos?">More photos?</button>
+              <button type="button" class="msg-chip" data-text="What is the exact condition of the item?">Condition?</button>
+            </div>
+
+            <!-- Input row -->
+            <form method="post" id="msgForm">
+              <input type="hidden" name="full_name" id="hiddenName">
+              <input type="hidden" name="email"     id="hiddenEmail">
+              <input type="hidden" name="message"   id="hiddenMessage">
+
+              <div class="msg-input-row">
+                <div class="msg-input-wrap">
+                  <textarea
+                    class="msg-textarea"
+                    id="msgInput"
+                    placeholder="Type a message… (Ctrl+Enter to send)"
+                    rows="1"
+                    maxlength="800"
+                  ></textarea>
+                </div>
+                <button type="button" class="msg-send" id="sendBtn" title="Send">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <line x1="22" y1="2" x2="11" y2="13"/>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </button>
+              </div>
+            </form>
+
+            <!-- DaisyUI modal for name/email -->
+            <dialog id="senderModal" class="modal">
+              <div class="modal-box">
+                <h3 style="font-family:'Krona One',sans-serif; font-size:18px; color:#fff; margin-bottom:5px;">Before you send</h3>
+                <p style="font-size:13px; color:rgba(255,255,255,0.4); margin-bottom:20px;">The seller needs to know how to reply.</p>
+
+                {% if error %}
+                  <div class="box err" style="margin-bottom:14px;">{{ error }}</div>
+                {% endif %}
+
+                <div style="display:grid; gap:14px;">
+                  <div class="modal-field">
+                    <label>Your name</label>
+                    <input id="modalName" type="text" placeholder="Jane Smith">
+                  </div>
+                  <div class="modal-field">
+                    <label>Your email</label>
+                    <input id="modalEmail" type="email" placeholder="jane@example.com">
+                  </div>
+                </div>
+
+                <p id="modalErr" style="font-size:12px; color:#fca5a5; margin-top:10px; display:none;">Please fill in both fields.</p>
+
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                  <button type="button" id="modalCancel"
+                    style="flex:1; padding:11px; border-radius:10px; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.55); font-family:inherit; font-size:13px; cursor:pointer;">
+                    Cancel
+                  </button>
+                  <button type="button" id="modalConfirm"
+                    style="flex:2; padding:11px; border-radius:10px; border:none; background:#c82000; color:#fff; font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; transition: background .15s ease;">
+                    Send message →
+                  </button>
+                </div>
+              </div>
+              <form method="dialog" class="modal-backdrop"><button>close</button></form>
+            </dialog>
+          {% endif %}
+
+        </div><!-- /msg-chat-window -->
+      </div><!-- /msg-page -->
+    {% endif %}
+
+  </div><!-- /page-shell -->
+
+  <script>
+    const msgInput     = document.getElementById('msgInput');
+    const sendBtn      = document.getElementById('sendBtn');
+    const modal        = document.getElementById('senderModal');
+    const modalName    = document.getElementById('modalName');
+    const modalEmail   = document.getElementById('modalEmail');
+    const modalConfirm = document.getElementById('modalConfirm');
+    const modalCancel  = document.getElementById('modalCancel');
+    const modalErr     = document.getElementById('modalErr');
+
+    // Auto-grow textarea
+    if (msgInput) {
+      msgInput.addEventListener('input', () => {
+        msgInput.style.height = 'auto';
+        msgInput.style.height = Math.min(msgInput.scrollHeight, 110) + 'px';
+      });
+    }
+
+    // Quick reply chips
+    document.querySelectorAll('.msg-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        if (!msgInput) return;
+        msgInput.value = chip.getAttribute('data-text') || '';
+        msgInput.focus();
+        msgInput.dispatchEvent(new Event('input'));
+      });
+    });
+
+    // Open modal on send click
+    if (sendBtn) {
+      sendBtn.addEventListener('click', () => {
+        const text = (msgInput?.value || '').trim();
+        if (!text) { msgInput?.focus(); return; }
+        if (modal) modal.showModal();
+      });
+    }
+
+    // Ctrl/Cmd + Enter shortcut
+    if (msgInput) {
+      msgInput.addEventListener('keydown', e => {
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+          e.preventDefault();
+          sendBtn?.click();
+        }
+      });
+    }
+
+    if (modalCancel) modalCancel.addEventListener('click', () => modal?.close());
+
+    if (modalConfirm) {
+      modalConfirm.addEventListener('click', () => {
+        const name  = (modalName?.value || '').trim();
+        const email = (modalEmail?.value || '').trim();
+        if (!name || !email) {
+          if (modalErr) modalErr.style.display = 'block';
+          if (!name) modalName?.focus(); else modalEmail?.focus();
+          return;
+        }
+        document.getElementById('hiddenName').value    = name;
+        document.getElementById('hiddenEmail').value   = email;
+        document.getElementById('hiddenMessage').value = (msgInput?.value || '').trim();
+        document.getElementById('msgForm').submit();
+      });
+    }
+
+    // Scroll to bottom
+    const chatBody = document.getElementById('chatBody');
+    if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+  </script>
+</body>
+</html>
