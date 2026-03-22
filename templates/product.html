@@ -54,7 +54,7 @@
                         </div>
 
                         <div class="product-actions">
-                            <a class="action-btn action-secondary" href="{{ url_for('product_action', record_id=record.id, action_type='offer') }}">Make an offer</a>
+                            <a class="action-btn action-secondary" href="{{ url_for('make_offer', record_id=record.id) }}">Make an offer</a>
                             <a class="action-btn action-primary" href="{{ url_for('product_action', record_id=record.id, action_type='buy') }}">Buy the product</a>
                             <a class="action-btn action-secondary" href="{{ url_for('message_seller', record_id=record.id) }}">Message seller</a>
                         </div>

@@ -49,8 +49,8 @@
                 </div>
                 <div class="offer-success-title">Offer sent!</div>
                 <p class="offer-success-sub">
-                  Your offer was sent to <strong style="color: rgba(255, 255, 255, 0.72);">{{ seller_display }}</strong>.
-                  They'll reply to <strong style="color: rgba(255, 255, 255, 0.72);">{{ submitted_email }}</strong>.
+                  Your offer was sent to <strong class="offer-success-emphasis">{{ seller_display }}</strong>.
+                  They'll reply to <strong class="offer-success-emphasis">{{ submitted_email }}</strong>.
                 </p>
                 <div class="offer-success-actions">
                   <a class="offer-success-btn offer-success-btn--primary" href="{{ url_for('product_page', record_id=record.id) }}">
@@ -104,7 +104,7 @@
                   </div>
                   {% endif %}
 
-                  <div class="ofield" style="max-width: 200px;">
+                  <div class="ofield offer-price-field">
                     <label for="offer_price">Your price (€)</label>
                     <div class="ofield-price-wrap">
                       <span class="ofield-price-symbol">€</span>
@@ -192,7 +192,7 @@
 
             <!-- Actions -->
             <a class="offer-back" href="{{ url_for('product_page', record_id=record.id) }}">Back to product</a>
-            <a class="offer-back" href="{{ url_for('product_action', record_id=record.id, action_type='message') }}" style="margin-top: -8px;">Message seller instead</a>
+            <a class="offer-back offer-back-tight" href="{{ url_for('product_action', record_id=record.id, action_type='message') }}">Message seller instead</a>
 
           </aside>
 

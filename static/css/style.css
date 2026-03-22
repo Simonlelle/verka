@@ -4074,7 +4074,7 @@ body.offer-page .offer-form-section {
   padding: 28px 28px 0;
 }
 
-body.offer-page .offer-form-section > :last-child {
+body.offer-page .offer-form-section:last-of-type {
   padding-bottom: 28px;
 }
 
@@ -4159,10 +4159,15 @@ body.offer-page .ofields-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 14px;
+  margin-bottom: 16px;
 }
 
 body.offer-page .ofields-row .ofield {
   margin-bottom: 0;
+}
+
+body.offer-page .offer-price-field {
+  max-width: 200px;
 }
 
 /* Price input with € symbol */
@@ -4354,6 +4359,10 @@ body.offer-page .offer-success-sub {
   color: rgba(255, 255, 255, 0.45);
   line-height: 1.7;
   max-width: 340px;
+}
+
+body.offer-page .offer-success-emphasis {
+  color: rgba(255, 255, 255, 0.72);
 }
 
 body.offer-page .offer-success-actions {
@@ -4560,6 +4569,10 @@ body.offer-page .offer-back:hover {
 
 body.offer-page .offer-back:hover::before {
   transform: translateX(-3px);
+}
+
+body.offer-page .offer-back-tight {
+  margin-top: -8px;
 }
 
 /* Responsive */
