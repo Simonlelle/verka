@@ -165,10 +165,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const buyer = escapeHtml(f.BuyerName || '');
             const category = escapeHtml(f.Category || '');
             const budget = f.Budget ? `€${Number(f.Budget).toFixed(0)}` : 'Open';
+            const detailHref = record.id ? `/reverse/${encodeURIComponent(record.id)}` : '/reverse';
 
             const card = document.createElement('a');
             card.className = 'reverse-request-card';
-            card.href = '/reverse';
+            card.href = detailHref;
             card.innerHTML = `
                 <div class="reverse-request-tags">
                     ${category ? `<span class="reverse-request-tag">${category}</span>` : ''}

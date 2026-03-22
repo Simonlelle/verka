@@ -2309,3 +2309,2272 @@ body.message-seller-page .modal-field input::placeholder {
     display: none;
   }
 }
+
+/* ══════════════════════════════════════════
+   REVERSE LISTING PAGE ONLY
+══════════════════════════════════════════ */
+body.reverse-listing-page .back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 24px;
+}
+
+body.reverse-listing-page .back-link::before {
+  content: '←';
+  font-size: 15px;
+  transition: transform 0.18s ease;
+}
+
+body.reverse-listing-page .back-link:hover::before {
+  transform: translateX(-3px);
+}
+
+body.reverse-listing-page .reverse-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  gap: 28px;
+  align-items: start;
+}
+
+body.reverse-listing-page .reverse-main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+body.reverse-listing-page .reverse-hero-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background:
+    radial-gradient(ellipse 70% 60% at 80% 30%, rgba(230, 51, 0, 0.14) 0%, transparent 65%),
+    linear-gradient(135deg, #1e0604 0%, #280905 60%, #2e0a07 100%);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+  padding: 36px 36px 32px;
+}
+
+body.reverse-listing-page .reverse-hero-card::before {
+  content: '';
+  position: absolute;
+  top: -80px;
+  right: -80px;
+  width: 260px;
+  height: 260px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  pointer-events: none;
+}
+
+body.reverse-listing-page .reverse-hero-card::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  pointer-events: none;
+}
+
+body.reverse-listing-page .reverse-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(230, 51, 0, 0.35);
+  background: rgba(230, 51, 0, 0.12);
+  color: #ff7a5c;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  width: fit-content;
+}
+
+body.reverse-listing-page .reverse-badge svg {
+  width: 11px;
+  height: 11px;
+}
+
+body.reverse-listing-page .reverse-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: clamp(24px, 4vw, 38px);
+  line-height: 1.15;
+  color: #fff;
+  letter-spacing: -0.3px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 18px;
+}
+
+body.reverse-listing-page .reverse-hero-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  position: relative;
+  z-index: 1;
+}
+
+body.reverse-listing-page .reverse-budget-pill {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 18px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+body.reverse-listing-page .reverse-budget-label {
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.32);
+  margin-bottom: 3px;
+}
+
+body.reverse-listing-page .reverse-budget-value {
+  font-size: 22px;
+  font-weight: 800;
+  color: #e63300;
+  letter-spacing: -0.5px;
+  line-height: 1;
+}
+
+body.reverse-listing-page .reverse-budget-value.open {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.55);
+  font-weight: 600;
+}
+
+body.reverse-listing-page .reverse-category-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+body.reverse-listing-page .reverse-desc-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 22px 24px;
+}
+
+body.reverse-listing-page .reverse-desc-card h3 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.32);
+  margin-bottom: 12px;
+}
+
+body.reverse-listing-page .reverse-desc-card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.72);
+  white-space: pre-wrap;
+}
+
+body.reverse-listing-page .reverse-details-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+body.reverse-listing-page .reverse-details-card h3 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.32);
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body.reverse-listing-page .rdetail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.15s ease;
+}
+
+body.reverse-listing-page .rdetail-row:last-child {
+  border-bottom: none;
+}
+
+body.reverse-listing-page .rdetail-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+body.reverse-listing-page .rdetail-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+body.reverse-listing-page .rdetail-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.82);
+  text-align: right;
+}
+
+body.reverse-listing-page .rdetail-value-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+body.reverse-listing-page .rdetail-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4ade80;
+  display: inline-block;
+}
+
+body.reverse-listing-page .reverse-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+body.reverse-listing-page .reverse-buyer-card,
+body.reverse-listing-page .reverse-how-card,
+body.reverse-listing-page .reverse-form-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 22px;
+}
+
+body.reverse-listing-page .reverse-buyer-card {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+body.reverse-listing-page .reverse-buyer-card h3,
+body.reverse-listing-page .reverse-how-card h3 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+body.reverse-listing-page .reverse-buyer-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+body.reverse-listing-page .reverse-buyer-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(200, 32, 0, 0.18);
+  border: 1px solid rgba(200, 32, 0, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.reverse-listing-page .reverse-buyer-avatar svg {
+  width: 20px;
+  height: 20px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+body.reverse-listing-page .reverse-buyer-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+body.reverse-listing-page .reverse-buyer-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  margin-top: 2px;
+}
+
+body.reverse-listing-page .reverse-offer-success {
+  border-radius: 14px;
+  background: rgba(74, 222, 128, 0.07);
+  border: 1px solid rgba(74, 222, 128, 0.18);
+  padding: 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+body.reverse-listing-page .reverse-offer-success-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(74, 222, 128, 0.12);
+  border: 1px solid rgba(74, 222, 128, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.reverse-listing-page .reverse-offer-success-icon svg {
+  width: 18px;
+  height: 18px;
+  color: #4ade80;
+}
+
+body.reverse-listing-page .reverse-offer-success-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+body.reverse-listing-page .reverse-offer-success-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+}
+
+body.reverse-listing-page .reverse-success-strong {
+  color: rgba(255, 255, 255, 0.72);
+}
+
+body.reverse-listing-page .reverse-form-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.reverse-listing-page .reverse-form-card h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+body.reverse-listing-page .reverse-form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.reverse-listing-page .rform-field {
+  display: grid;
+  gap: 7px;
+}
+
+body.reverse-listing-page .rform-field label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.35);
+  font-weight: 600;
+}
+
+body.reverse-listing-page .rform-field input,
+body.reverse-listing-page .rform-field textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 11px 13px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.reverse-listing-page .rform-field input:focus,
+body.reverse-listing-page .rform-field textarea:focus {
+  border-color: rgba(200, 32, 0, 0.5);
+  box-shadow: 0 0 0 3px rgba(200, 32, 0, 0.09);
+}
+
+body.reverse-listing-page .rform-field input::placeholder,
+body.reverse-listing-page .rform-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+body.reverse-listing-page .rform-field textarea {
+  min-height: 90px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+body.reverse-listing-page .reverse-offer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: none;
+  background: #c82000;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  box-shadow: 0 6px 20px rgba(200, 32, 0, 0.3);
+}
+
+body.reverse-listing-page .reverse-offer-btn svg {
+  width: 15px;
+  height: 15px;
+  transition: transform 0.18s ease;
+}
+
+body.reverse-listing-page .reverse-offer-btn:hover {
+  background: #e63300;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(200, 32, 0, 0.4);
+}
+
+body.reverse-listing-page .reverse-offer-btn:hover svg {
+  transform: translateX(2px);
+}
+
+body.reverse-listing-page .reverse-how-card {
+  padding: 20px 22px;
+}
+
+body.reverse-listing-page .reverse-how-card h3 {
+  margin-bottom: 14px;
+}
+
+body.reverse-listing-page .reverse-how-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.reverse-listing-page .reverse-how-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+body.reverse-listing-page .reverse-how-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(200, 32, 0, 0.18);
+  border: 1px solid rgba(200, 32, 0, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ff7a5c;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+body.reverse-listing-page .reverse-how-text {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.52);
+  line-height: 1.55;
+}
+
+body.reverse-listing-page .reverse-how-text strong {
+  color: rgba(255, 255, 255, 0.75);
+  display: block;
+  font-size: 13px;
+  margin-bottom: 1px;
+}
+
+@media (max-width: 860px) {
+  body.reverse-listing-page .reverse-layout {
+    grid-template-columns: 1fr;
+  }
+
+  body.reverse-listing-page .reverse-sidebar {
+    position: static;
+  }
+}
+
+/* ══════════════════════════════════════════
+   ADD LISTING PAGE - FORM PAGES STYLES
+   Both add-listing and add-reverse share identical layout
+   and form patterns (grid layout, sidebar, cards, etc.)
+══════════════════════════════════════════ */
+
+/* ─ Layout ─ */
+body.add-listing-page {
+  overflow-x: clip;
+}
+
+/* ─ Page Grid Layout (form + sidebar) ─ */
+body.add-listing-page .listing-page {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 28px;
+  align-items: start;
+  padding-bottom: 60px;
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
+}
+
+body.add-listing-page .listing-page > * {
+  min-width: 0;
+}
+
+/* ─ Page Header (title + description) ─ */
+body.add-listing-page .listing-header {
+  padding: var(--pad-x) var(--pad-x) 32px;
+}
+
+body.add-listing-page .listing-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--red-hot);
+  margin-bottom: 10px;
+}
+
+body.add-listing-page .listing-eyebrow svg {
+  width: 12px;
+  height: 12px;
+}
+
+body.add-listing-page .listing-page-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+body.add-listing-page .listing-page-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.6;
+}
+
+/* ─ Form Card Container ─ */
+body.add-listing-page .listing-form-card {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+body.add-listing-page .listing-form-section {
+  padding: 28px 28px 0;
+}
+
+body.add-listing-page .listing-form-section:last-of-type {
+  padding-bottom: 28px;
+}
+
+/* ─ Form Fields (inputs, selects, textareas) ─ */
+body.add-listing-page .lfield {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+body.add-listing-page .lfield:last-child {
+  margin-bottom: 0;
+}
+
+body.add-listing-page .lfield label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+body.add-listing-page .lfield label .required {
+  color: var(--red-hot);
+  margin-left: 2px;
+}
+
+body.add-listing-page .lfield input,
+body.add-listing-page .lfield textarea,
+body.add-listing-page .lfield select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+  padding: 12px 14px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+body.add-listing-page .lfield input:focus,
+body.add-listing-page .lfield textarea:focus,
+body.add-listing-page .lfield select:focus {
+  border-color: rgba(200, 32, 0, 0.55);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(200, 32, 0, 0.1);
+}
+
+body.add-listing-page .lfield input::placeholder,
+body.add-listing-page .lfield textarea::placeholder {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+body.add-listing-page .lfield textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+body.add-listing-page .lfield select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+body.add-listing-page .lfield select option {
+  background: #1e0604;
+  color: #fff;
+}
+
+body.add-listing-page .lfield-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.28);
+  line-height: 1.5;
+  margin-top: -4px;
+}
+
+body.add-listing-page .lfields-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+body.add-listing-page .lfields-row .lfield {
+  flex: 1;
+}
+
+/* ─ Photo Upload (file input + drag-drop preview) ─ */
+body.add-listing-page .listing-price-field {
+  max-width: 200px;
+}
+
+body.add-listing-page .listing-price-hint {
+  margin-top: -10px;
+  margin-bottom: 16px;
+}
+
+body.add-listing-page .image-preview-wrap {
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: none;
+  aspect-ratio: 16 / 9;
+}
+
+body.add-listing-page .image-preview-wrap.has-image {
+  display: block;
+}
+
+body.add-listing-page .listing-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+body.add-listing-page .listing-dropzone {
+  margin-top: 4px;
+  border-radius: 12px;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 18px 16px;
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background 0.18s ease;
+}
+
+body.add-listing-page .listing-dropzone:hover,
+body.add-listing-page .listing-dropzone.is-dragover {
+  border-color: rgba(230, 51, 0, 0.45);
+  background: rgba(230, 51, 0, 0.1);
+}
+
+body.add-listing-page .listing-dropzone-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: rgba(200, 32, 0, 0.16);
+  border: 1px solid rgba(200, 32, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.add-listing-page .listing-dropzone-icon svg {
+  width: 16px;
+  height: 16px;
+  color: #ff7a5c;
+}
+
+body.add-listing-page .listing-dropzone-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.78);
+}
+
+body.add-listing-page .listing-dropzone-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+/* ─ Dividers & Submission ─ */
+body.add-listing-page .image-preview-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+body.add-listing-page .listing-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 28px;
+}
+
+body.add-listing-page .listing-submit-area {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.add-listing-page .listing-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 13px;
+  border: none;
+  background: var(--red);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(200, 32, 0, 0.28);
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+body.add-listing-page .listing-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+body.add-listing-page .listing-submit-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.18s ease;
+}
+
+body.add-listing-page .listing-submit-btn:hover {
+  background: var(--red-hot);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(200, 32, 0, 0.38);
+}
+
+body.add-listing-page .listing-submit-btn:hover svg {
+  transform: translateX(3px);
+}
+
+body.add-listing-page .listing-submit-btn:active {
+  transform: scale(0.99);
+}
+
+body.add-listing-page .listing-submit-note {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ─ Success & Error States ─ */
+body.add-listing-page .listing-success {
+  padding: 36px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+body.add-listing-page .listing-success-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.add-listing-page .listing-success-icon svg {
+  width: 28px;
+  height: 28px;
+  color: #4ade80;
+}
+
+body.add-listing-page .listing-success-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: 22px;
+  color: #fff;
+}
+
+body.add-listing-page .listing-success-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+body.add-listing-page .listing-success-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+body.add-listing-page .listing-success-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+
+body.add-listing-page .listing-success-btn--primary {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(200, 32, 0, 0.25);
+}
+
+body.add-listing-page .listing-success-btn--primary:hover {
+  background: var(--red-hot);
+  transform: translateY(-1px);
+}
+
+body.add-listing-page .listing-success-btn--secondary {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+body.add-listing-page .listing-success-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+body.add-listing-page .listing-error-wrap {
+  padding-top: 24px;
+}
+
+body.add-listing-page .listing-error {
+  margin: 0 28px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 13px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body.add-listing-page .listing-error svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ─ Right Sidebar (tips, status, CTA) ─ */
+body.add-listing-page .listing-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+body.add-listing-page .lsidebar-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px 22px;
+}
+
+body.add-listing-page .lsidebar-card h3 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.28);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.add-listing-page .lsidebar-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.add-listing-page .lsidebar-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body.add-listing-page .lsidebar-tip-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(200, 32, 0, 0.14);
+  border: 1px solid rgba(200, 32, 0, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.add-listing-page .lsidebar-tip-icon svg {
+  width: 13px;
+  height: 13px;
+  color: #ff7a5c;
+}
+
+body.add-listing-page .lsidebar-tip-text strong {
+  display: block;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2px;
+}
+
+body.add-listing-page .lsidebar-tip-text span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.55;
+}
+
+body.add-listing-page .lsidebar-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.add-listing-page .lsidebar-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #facc15;
+  box-shadow: 0 0 6px rgba(250, 204, 21, 0.5);
+  flex-shrink: 0;
+}
+
+body.add-listing-page .lsidebar-status-text {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.5);
+  line-height: 1.5;
+}
+
+body.add-listing-page .lsidebar-status-text strong {
+  display: block;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+}
+
+body.add-listing-page .lsidebar-card-cta {
+  background: radial-gradient(ellipse at 80% 0%, rgba(230, 51, 0, 0.1) 0%, transparent 60%), rgba(255, 255, 255, 0.03);
+}
+
+body.add-listing-page .lsidebar-cta-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+body.add-listing-page .lsidebar-cta-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 11px;
+  border: 1px solid rgba(230, 51, 0, 0.3);
+  background: rgba(230, 51, 0, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+
+body.add-listing-page .lsidebar-cta-link:hover {
+  background: rgba(230, 51, 0, 0.2);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  body.add-listing-page .listing-page {
+    grid-template-columns: 1fr;
+  }
+
+  body.add-listing-page .listing-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  body.add-listing-page .lfields-row {
+    flex-direction: column;
+  }
+}
+
+/* ══════════════════════════════════════════
+   ADD REVERSE PAGE - BUY REQUEST FORM
+   Inherits most patterns from add-listing page
+   with page-specific variants (.ra-*, .rfield)
+══════════════════════════════════════════ */
+
+/* ─ Layout ─ */
+body.add-reverse-page {
+  overflow-x: clip;
+}
+
+body.add-reverse-page .reverse-add-page {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: start;
+  padding-bottom: 60px;
+  padding-left: var(--pad-x);
+  padding-right: var(--pad-x);
+}
+
+body.add-reverse-page .reverse-add-page > * {
+  min-width: 0;
+}
+
+body.add-reverse-page .reverse-add-main {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* ─ Page Header ─ */
+body.add-reverse-page .reverse-add-header {
+  padding: var(--pad-x) var(--pad-x) 32px;
+}
+
+body.add-reverse-page .reverse-add-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--red-hot);
+  margin-bottom: 10px;
+}
+
+body.add-reverse-page .reverse-add-eyebrow svg {
+  width: 12px;
+  height: 12px;
+}
+
+body.add-reverse-page .reverse-add-page-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+body.add-reverse-page .reverse-add-page-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.6;
+}
+
+/* ─ Form Card & Fields ─ */
+body.add-reverse-page .reverse-add-card {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+body.add-reverse-page .reverse-form-section {
+  padding: 28px 28px 0;
+}
+
+body.add-reverse-page .reverse-form-section:last-of-type {
+  padding-bottom: 28px;
+}
+
+body.add-reverse-page .rfield {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+body.add-reverse-page .rfield:last-child {
+  margin-bottom: 0;
+}
+
+body.add-reverse-page .rfield label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+body.add-reverse-page .rfield label .required {
+  color: var(--red-hot);
+  margin-left: 2px;
+}
+
+body.add-reverse-page .rfield input,
+body.add-reverse-page .rfield textarea,
+body.add-reverse-page .rfield select {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+  padding: 12px 14px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+body.add-reverse-page .rfield input:focus,
+body.add-reverse-page .rfield textarea:focus,
+body.add-reverse-page .rfield select:focus {
+  border-color: rgba(200, 32, 0, 0.55);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(200, 32, 0, 0.1);
+}
+
+body.add-reverse-page .rfield input::placeholder,
+body.add-reverse-page .rfield textarea::placeholder {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+body.add-reverse-page .rfield textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+body.add-reverse-page .rfield select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.35)' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+  cursor: pointer;
+}
+
+body.add-reverse-page .rfield select option {
+  background: #1e0604;
+  color: #fff;
+}
+
+body.add-reverse-page .rfield-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.28);
+  line-height: 1.5;
+  margin-top: -4px;
+}
+
+body.add-reverse-page .rfields-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+body.add-reverse-page .rfields-row .rfield {
+  flex: 1;
+}
+
+body.add-reverse-page .rfield-budget-wrap {
+  position: relative;
+}
+
+body.add-reverse-page .rfield-budget-wrap input {
+  padding-left: 46px;
+}
+
+body.add-reverse-page .rfield-budget-symbol {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+/* ─ Submit & State Messages ─ */
+body.add-reverse-page .reverse-add-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 28px;
+}
+
+body.add-reverse-page .reverse-add-submit-area {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.add-reverse-page .reverse-add-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 13px;
+  border: none;
+  background: var(--red);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(200, 32, 0, 0.28);
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+body.add-reverse-page .reverse-add-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+body.add-reverse-page .reverse-add-submit-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.18s ease;
+}
+
+body.add-reverse-page .reverse-add-submit-btn:hover {
+  background: var(--red-hot);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(200, 32, 0, 0.38);
+}
+
+body.add-reverse-page .reverse-add-submit-btn:hover svg {
+  transform: translateX(3px);
+}
+
+body.add-reverse-page .reverse-add-submit-btn:active {
+  transform: scale(0.99);
+}
+
+body.add-reverse-page .reverse-add-submit-note {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+  line-height: 1.5;
+}
+
+body.add-reverse-page .reverse-add-error {
+  margin: 24px 28px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 13px;
+  line-height: 1.5;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body.add-reverse-page .reverse-add-error svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+body.add-reverse-page .reverse-add-success {
+  padding: 48px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+body.add-reverse-page .reverse-add-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(200, 32, 0, 0.12);
+  border: 1px solid rgba(200, 32, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.add-reverse-page .reverse-add-success-icon svg {
+  width: 32px;
+  height: 32px;
+  color: #ff7a5c;
+}
+
+body.add-reverse-page .reverse-add-success-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: 22px;
+  color: #fff;
+}
+
+body.add-reverse-page .reverse-add-success-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+body.add-reverse-page .reverse-add-success-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+/* ─ Sidebar & Tips Section ─ */
+body.add-reverse-page .success-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+body.add-reverse-page .success-btn--primary {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(200, 32, 0, 0.25);
+}
+
+body.add-reverse-page .success-btn--primary:hover {
+  background: var(--red-hot);
+  transform: translateY(-1px);
+}
+
+body.add-reverse-page .success-btn--secondary {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+body.add-reverse-page .success-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+body.add-reverse-page .reverse-add-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+body.add-reverse-page .rasidebar-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px 22px;
+}
+
+body.add-reverse-page .rasidebar-card h3 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.28);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.add-reverse-page .ra-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.add-reverse-page .ra-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+body.add-reverse-page .ra-step-num {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(200, 32, 0, 0.15);
+  border: 1px solid rgba(200, 32, 0, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ff7a5c;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+body.add-reverse-page .ra-step-body strong {
+  display: block;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 2px;
+}
+
+body.add-reverse-page .ra-step-body span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.55;
+}
+
+body.add-reverse-page .ra-tips {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+body.add-reverse-page .ra-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body.add-reverse-page .ra-tip-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: rgba(200, 32, 0, 0.12);
+  border: 1px solid rgba(200, 32, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+body.add-reverse-page .ra-tip-icon svg {
+  width: 13px;
+  height: 13px;
+  color: #ff7a5c;
+}
+
+body.add-reverse-page .ra-tip-body strong {
+  display: block;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 2px;
+}
+
+body.add-reverse-page .ra-tip-body span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.5;
+}
+
+body.add-reverse-page .ra-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.add-reverse-page .ra-example {
+  padding: 11px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+body.add-reverse-page .ra-example:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.add-reverse-page .ra-example-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 3px;
+}
+
+body.add-reverse-page .ra-example-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.add-reverse-page .ra-example-cat {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.32);
+}
+
+body.add-reverse-page .ra-example-budget {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e63300;
+}
+
+body.add-reverse-page .ra-example-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.22);
+  text-align: center;
+  margin-top: 4px;
+}
+
+body.add-reverse-page .reverse-add-tips-row .ra-tips {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+body.add-reverse-page .reverse-add-tips-row .ra-tip {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 10px;
+}
+
+body.add-reverse-page .rasidebar-card-cta {
+  background: radial-gradient(ellipse at 80% 0%, rgba(230, 51, 0, 0.1) 0%, transparent 60%), rgba(255, 255, 255, 0.03);
+}
+
+body.add-reverse-page .rasidebar-cta-text {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+body.add-reverse-page .rasidebar-cta-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  border-radius: 11px;
+  border: 1px solid rgba(230, 51, 0, 0.3);
+  background: rgba(230, 51, 0, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+}
+
+body.add-reverse-page .rasidebar-cta-link:hover {
+  background: rgba(230, 51, 0, 0.2);
+  color: #fff;
+}
+
+@media (max-width: 900px) {
+  body.add-reverse-page .reverse-add-page {
+    grid-template-columns: 1fr;
+  }
+
+  body.add-reverse-page .reverse-add-tips-row .ra-tips {
+    grid-template-columns: 1fr;
+  }
+
+  body.add-reverse-page .reverse-add-sidebar {
+    display: none;
+  }
+}
+
+
+/* ══════════════════════════════════════════
+   OFFER PAGE - MAKE AN OFFER FORM
+   Similar structure to form pages (grid + sidebar)
+══════════════════════════════════════════ */
+
+/* ─ Layout ─ */
+body.offer-page {
+  overflow-x: clip;
+}
+
+body.offer-page .offer-page {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+  padding: 0 var(--pad-x) 60px;
+}
+
+body.offer-page .offer-page > * {
+  min-width: 0;
+}
+
+/* ─ Page Header ─ */
+body.offer-page .offer-header {
+  padding: var(--pad-x) var(--pad-x) 32px;
+}
+
+body.offer-page .offer-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--red-hot);
+  margin-bottom: 10px;
+}
+
+body.offer-page .offer-eyebrow svg {
+  width: 12px;
+  height: 12px;
+}
+
+body.offer-page .offer-page-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.1;
+  color: #fff;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+}
+
+body.offer-page .offer-page-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.42);
+  line-height: 1.6;
+}
+
+/* ─ Form Card Container ─ */
+body.offer-page .offer-card {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+body.offer-page .offer-form-section {
+  padding: 28px 28px 0;
+}
+
+body.offer-page .offer-form-section > :last-child {
+  padding-bottom: 28px;
+}
+
+body.offer-page .offer-section-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.28);
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+body.offer-page .offer-section-label svg {
+  width: 13px;
+  height: 13px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ─ Form Fields ─ */
+body.offer-page .ofield {
+  display: grid;
+  gap: 7px;
+  margin-bottom: 16px;
+}
+
+body.offer-page .ofield:last-child {
+  margin-bottom: 0;
+}
+
+body.offer-page .ofield label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+body.offer-page .ofield label .required {
+  color: var(--red-hot);
+  margin-left: 2px;
+}
+
+body.offer-page .ofield input,
+body.offer-page .ofield textarea {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 11px;
+  padding: 12px 14px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.offer-page .ofield input:focus,
+body.offer-page .ofield textarea:focus {
+  border-color: rgba(200, 32, 0, 0.55);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 0 0 3px rgba(200, 32, 0, 0.1);
+}
+
+body.offer-page .ofield input::placeholder,
+body.offer-page .ofield textarea::placeholder {
+  color: rgba(255, 255, 255, 0.18);
+}
+
+body.offer-page .ofield textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.65;
+}
+
+/* Field rows */
+body.offer-page .ofields-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+body.offer-page .ofields-row .ofield {
+  margin-bottom: 0;
+}
+
+/* Price input with € symbol */
+body.offer-page .ofield-price-wrap {
+  position: relative;
+}
+
+body.offer-page .ofield-price-wrap input {
+  padding-left: 32px;
+}
+
+body.offer-page .ofield-price-symbol {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.35);
+  pointer-events: none;
+}
+
+/* Asking price reference display */
+body.offer-page .offer-asking {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  margin-bottom: 16px;
+}
+
+body.offer-page .offer-asking-label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+body.offer-page .offer-asking-price {
+  font-size: 18px;
+  font-weight: 800;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: -0.5px;
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 255, 255, 0.2);
+}
+
+body.offer-page .offer-asking-arrow {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 16px;
+}
+
+body.offer-page .offer-your-price {
+  font-size: 18px;
+  font-weight: 800;
+  color: #e63300;
+  letter-spacing: -0.5px;
+  min-width: 60px;
+  text-align: right;
+}
+
+/* ─ Dividers & Submission ─ */
+body.offer-page .offer-divider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 28px;
+}
+
+body.offer-page .offer-submit-area {
+  padding: 24px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.offer-page .offer-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 13px;
+  border: none;
+  background: var(--red);
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(200, 32, 0, 0.28);
+  transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+body.offer-page .offer-submit-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+body.offer-page .offer-submit-btn svg {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.18s ease;
+}
+
+body.offer-page .offer-submit-btn:hover {
+  background: var(--red-hot);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(200, 32, 0, 0.38);
+}
+
+body.offer-page .offer-submit-btn:hover svg {
+  transform: translateX(3px);
+}
+
+body.offer-page .offer-submit-btn:active {
+  transform: scale(0.99);
+}
+
+body.offer-page .offer-submit-note {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.28);
+  text-align: center;
+  line-height: 1.5;
+}
+
+/* ─ Success & Error States ─ */
+body.offer-page .offer-error {
+  margin: 24px 28px 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+  font-size: 13px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body.offer-page .offer-error svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+body.offer-page .offer-success {
+  padding: 48px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+
+body.offer-page .offer-success-icon {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: rgba(74, 222, 128, 0.1);
+  border: 1px solid rgba(74, 222, 128, 0.22);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+body.offer-page .offer-success-icon svg {
+  width: 30px;
+  height: 30px;
+  color: #4ade80;
+}
+
+body.offer-page .offer-success-title {
+  font-family: 'Krona One', sans-serif;
+  font-size: 22px;
+  color: #fff;
+}
+
+body.offer-page .offer-success-sub {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.7;
+  max-width: 340px;
+}
+
+body.offer-page .offer-success-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+body.offer-page .offer-success-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 11px 18px;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.18s ease;
+  text-decoration: none;
+}
+
+body.offer-page .offer-success-btn--primary {
+  background: var(--red);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(200, 32, 0, 0.25);
+}
+
+body.offer-page .offer-success-btn--primary:hover {
+  background: var(--red-hot);
+  transform: translateY(-1px);
+}
+
+body.offer-page .offer-success-btn--secondary {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.65);
+}
+
+body.offer-page .offer-success-btn--secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* ─ Right Sidebar ─ */
+body.offer-page .offer-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  position: sticky;
+  top: 24px;
+}
+
+/* Product preview card */
+body.offer-page .offer-product-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+}
+
+body.offer-page .offer-product-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+body.offer-page .offer-product-img-placeholder {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #140302;
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 13px;
+}
+
+body.offer-page .offer-product-body {
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+body.offer-page .offer-product-name {
+  font-family: 'Krona One', sans-serif;
+  font-size: 15px;
+  color: #fff;
+  line-height: 1.25;
+}
+
+body.offer-page .offer-product-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: #e63300;
+  letter-spacing: -0.5px;
+}
+
+body.offer-page .offer-product-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+body.offer-page .offer-product-chip {
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* Info card */
+body.offer-page .offer-info-card {
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 20px 22px;
+}
+
+body.offer-page .offer-info-card h3 {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.28);
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+body.offer-page .offer-info-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+body.offer-page .offer-info-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+body.offer-page .offer-info-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(200, 32, 0, 0.14);
+  border: 1px solid rgba(200, 32, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  color: #ff7a5c;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+body.offer-page .offer-info-text strong {
+  display: block;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.78);
+  margin-bottom: 2px;
+}
+
+body.offer-page .offer-info-text span {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.38);
+  line-height: 1.55;
+}
+
+/* Back/action links */
+body.offer-page .offer-back {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 11px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 13px;
+  font-weight: 600;
+  justify-content: center;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+body.offer-page .offer-back::before {
+  content: '←';
+  transition: transform 0.15s ease;
+}
+
+body.offer-page .offer-back:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+}
+
+body.offer-page .offer-back:hover::before {
+  transform: translateX(-3px);
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  body.offer-page .offer-page {
+    grid-template-columns: 1fr;
+  }
+
+  body.offer-page .offer-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 540px) {
+  body.offer-page .ofields-row {
+    grid-template-columns: 1fr;
+  }
+}

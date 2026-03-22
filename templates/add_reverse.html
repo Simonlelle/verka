@@ -8,49 +8,240 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="min-h-screen antialiased">
+<body class="min-h-screen antialiased add-reverse-page">
   {% include '_sidebar.html' %}
   <div class="page-shell">
     <div class="page-content">
-      <div class="wrap">
-        <section class="card mx-auto max-w-2xl">
-          <h1 class="title text-2xl md:text-3xl">Post a buy request</h1>
-          <p class="sub mt-2">Tell sellers what you're looking for and they'll contact you.</p>
+      <div class="reverse-add-header">
+        <div class="reverse-add-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+            <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+          </svg>
+          Reverse marketplace
+        </div>
+        <h1 class="reverse-add-page-title">Post a buy request</h1>
+        <p class="reverse-add-page-sub">Tell sellers exactly what you're looking for and let the right offer come to you.</p>
+      </div>
 
-          {% if error %}<div class="box err">{{ error }}</div>{% endif %}
+      <div class="reverse-add-page">
+        <div class="reverse-add-main">
+          <div class="reverse-add-card">
+
           {% if submitted %}
-            <div class="box ok">Your request has been posted!</div>
-            <a class="link-btn link-btn--spaced inline-flex" href="{{ url_for('reverse_marketplace') }}">View all requests</a>
+            <div class="reverse-add-success">
+              <div class="reverse-add-success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                  <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
+              </div>
+              <div class="reverse-add-success-title">Request posted!</div>
+              <p class="reverse-add-success-sub">
+                Your buy request is now live. Sellers with the right item will reach out to you directly.
+              </p>
+              <div class="reverse-add-success-actions">
+                <a class="success-btn success-btn--primary" href="{{ url_for('reverse_marketplace') }}">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  View all requests
+                </a>
+                <a class="success-btn success-btn--secondary" href="{{ url_for('add_reverse') }}">
+                  Post another
+                </a>
+                <a class="success-btn success-btn--secondary" href="{{ url_for('explore') }}">
+                  Browse listings
+                </a>
+              </div>
+            </div>
+
+          {% else %}
+            {% if error %}
+              <div class="reverse-add-error">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                {{ error }}
+              </div>
+            {% endif %}
+
+            <form method="post" id="reverseForm">
+              <div class="reverse-form-section">
+                <div class="rfield">
+                  <label for="buyer_name">Your name</label>
+                  <input id="buyer_name" name="buyer_name" type="text" placeholder="Jane Smith">
+                </div>
+              </div>
+
+              <div class="reverse-add-divider"></div>
+
+              <div class="reverse-form-section">
+                <div class="rfield">
+                  <label for="item_name">Item name <span class="required">*</span></label>
+                  <input id="item_name" name="item_name" type="text" placeholder="e.g. Sony WH-1000XM5, IKEA Kallax, Vintage leather jacket..." required>
+                </div>
+
+                <div class="rfields-row">
+                  <div class="rfield">
+                    <label for="category">Category</label>
+                    <select id="category" name="category">
+                      <option value="" disabled selected>Select category</option>
+                      <option>Electronics</option>
+                      <option>Clothing</option>
+                      <option>Furniture</option>
+                      <option>Books</option>
+                      <option>Sports</option>
+                      <option>Toys</option>
+                      <option>Vehicles</option>
+                      <option>Garden</option>
+                      <option>Tools</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div class="rfield">
+                    <label for="budget">Max budget</label>
+                    <div class="rfield-budget-wrap">
+                      <span class="rfield-budget-symbol">EUR</span>
+                      <input id="budget" name="budget" type="number" min="0" placeholder="Leave blank if open">
+                    </div>
+                  </div>
+                </div>
+
+                <div class="rfield">
+                  <label for="details">Details</label>
+                  <textarea id="details" name="details" placeholder="Brand, model, size, colour, condition you're after - the more specific the better..."></textarea>
+                  <p class="rfield-hint">Be as specific as possible. Sellers with an exact match will reach out faster.</p>
+                </div>
+              </div>
+            </form>
+
+            <div class="reverse-add-divider"></div>
+
+            <div class="reverse-add-submit-area">
+              <button type="submit" form="reverseForm" class="reverse-add-submit-btn">
+                Post buy request
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+              <p class="reverse-add-submit-note">Your request goes live immediately and sellers can respond right away.</p>
+            </div>
           {% endif %}
 
-          {% if not submitted %}
-          <form method="post">
-            <div class="row">
-              <label for="buyer_name">Your name</label>
-              <input id="buyer_name" name="buyer_name" type="text">
+          </div>
+
+          <div class="rasidebar-card reverse-add-tips-row">
+            <h3>Tips for a great request</h3>
+            <div class="ra-tips">
+              <div class="ra-tip">
+                <div class="ra-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                  </svg>
+                </div>
+                <div class="ra-tip-body">
+                  <strong>Be specific</strong>
+                  <span>Include the exact brand, model or specs you need.</span>
+                </div>
+              </div>
+              <div class="ra-tip">
+                <div class="ra-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                </div>
+                <div class="ra-tip-body">
+                  <strong>Set a realistic budget</strong>
+                  <span>A budget attracts more serious sellers and filters out bad offers.</span>
+                </div>
+              </div>
+              <div class="ra-tip">
+                <div class="ra-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
+                </div>
+                <div class="ra-tip-body">
+                  <strong>Mention condition</strong>
+                  <span>Say if you're fine with used - it opens up far more offers.</span>
+                </div>
+              </div>
             </div>
-            <div class="row">
-              <label for="item_name">What do you want to buy?</label>
-              <input id="item_name" name="item_name" type="text" required>
+          </div>
+        </div>
+
+        <aside class="reverse-add-sidebar">
+          <div class="rasidebar-card">
+            <h3>How it works</h3>
+            <div class="ra-steps">
+              <div class="ra-step">
+                <span class="ra-step-num">1</span>
+                <div class="ra-step-body">
+                  <strong>Post your request</strong>
+                  <span>Describe what you're looking for and set a budget if you have one.</span>
+                </div>
+              </div>
+              <div class="ra-step">
+                <span class="ra-step-num">2</span>
+                <div class="ra-step-body">
+                  <strong>Sellers respond</strong>
+                  <span>Anyone with a matching item can send you an offer directly.</span>
+                </div>
+              </div>
+              <div class="ra-step">
+                <span class="ra-step-num">3</span>
+                <div class="ra-step-body">
+                  <strong>Pick the best deal</strong>
+                  <span>Compare offers and choose the one that works best for you.</span>
+                </div>
+              </div>
             </div>
-            <div class="row">
-              <label for="category">Category</label>
-              <input id="category" name="category" type="text" placeholder="e.g. Electronics, Clothing...">
+          </div>
+
+          <div class="rasidebar-card">
+            <h3>Example requests</h3>
+            <div class="ra-examples">
+              <div class="ra-example" data-title="Sony WH-1000XM5 Headphones" data-category="Electronics" data-budget="180" data-details="Looking for Sony WH-1000XM5. Good or like-new condition. Black preferred.">
+                <div class="ra-example-title">Sony WH-1000XM5 Headphones</div>
+                <div class="ra-example-meta">
+                  <span class="ra-example-cat">Electronics</span>
+                  <span class="ra-example-budget">EUR 180</span>
+                </div>
+              </div>
+              <div class="ra-example" data-title="IKEA Kallax 4x4 Shelf" data-category="Furniture" data-budget="60" data-details="Need a Kallax 4x4 shelf unit. White or birch effect. Must be in good condition, no major damage.">
+                <div class="ra-example-title">IKEA Kallax 4x4 Shelf</div>
+                <div class="ra-example-meta">
+                  <span class="ra-example-cat">Furniture</span>
+                  <span class="ra-example-budget">EUR 60</span>
+                </div>
+              </div>
+              <div class="ra-example" data-title="Vintage leather jacket" data-category="Clothing" data-budget="90" data-details="Looking for a vintage leather jacket, size M or L. Brown or black. Any brand welcome.">
+                <div class="ra-example-title">Vintage leather jacket</div>
+                <div class="ra-example-meta">
+                  <span class="ra-example-cat">Clothing</span>
+                  <span class="ra-example-budget">EUR 90</span>
+                </div>
+              </div>
             </div>
-            <div class="row">
-              <label for="budget">Budget (€)</label>
-              <input id="budget" name="budget" type="number" min="0">
-            </div>
-            <div class="row">
-              <label for="details">Details</label>
-              <textarea id="details" name="details" placeholder="Brand, model, condition..."></textarea>
-            </div>
-            <button type="submit" class="btn-submit">Post buy request</button>
-          </form>
-          {% endif %}
-        </section>
+            <p class="ra-example-hint">Click any example to prefill the form</p>
+          </div>
+
+          <div class="rasidebar-card rasidebar-card-cta">
+            <h3>Have something to sell?</h3>
+            <p class="rasidebar-cta-text">
+              Create a regular listing and reach buyers who are actively browsing.
+            </p>
+            <a href="{{ url_for('add_listing') }}" class="rasidebar-cta-link">
+              Create a sale listing ->
+            </a>
+          </div>
+        </aside>
       </div>
     </div>
   </div>
+
+  <script src="{{ url_for('static', filename='js/add_reverse.js') }}"></script>
 </body>
 </html>

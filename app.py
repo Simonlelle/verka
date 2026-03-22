@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, jsonify, make_response
+from flask import Flask, render_template, request, jsonify, make_response, url_for, redirect
 import os
+from uuid import uuid4
 from dotenv import load_dotenv
 from pyairtable import Api
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
@@ -43,15 +45,15 @@ def _resolve_buyer_name(fields, buyer_names):
     return ', '.join(names) or None
 
 
-def _get_reverse_request_fields():
+def _get_reverse_request_items():
     records = _get_reverse_table().all()
     buyer_names = _get_buyer_name_lookup()
-    requests = []
+    items = []
     for record in records:
         fields = dict(record.get('fields', {}))
         fields['BuyerName'] = _resolve_buyer_name(fields, buyer_names)
-        requests.append(fields)
-    return requests
+        items.append({'id': record['id'], 'fields': fields})
+    return items
 
 
 def _get_reverse_request_payloads():
@@ -123,9 +125,47 @@ def explore():
 @app.route('/reverse', methods=['GET'])
 def reverse_marketplace():
     try:
-        return render_template('reverse.html', requests=_get_reverse_request_fields())
+        return render_template('reverse.html', requests=_get_reverse_request_items())
     except Exception:
         return render_template('reverse.html', requests=[])
+
+
+@app.route('/reverse/<record_id>', methods=['GET', 'POST'])
+def reverse_listing_page(record_id):
+    try:
+        reverse_table = _get_reverse_table()
+        record = reverse_table.get(record_id)
+        buyer_names = _get_buyer_name_lookup()
+        listing = dict(record.get('fields', {}))
+        listing['BuyerName'] = _resolve_buyer_name(listing, buyer_names)
+    except Exception as e:
+        return render_template('reverse_listing.html', error=str(e), listing=None), 400
+
+    if request.method == 'POST':
+        full_name = (request.form.get('full_name') or '').strip()
+        email = (request.form.get('email') or '').strip()
+        offer_price = (request.form.get('offer_price') or '').strip()
+        message = (request.form.get('message') or '').strip()
+
+        if not full_name or not email:
+            return render_template(
+                'reverse_listing.html',
+                listing=listing,
+                error='Name and email are required.',
+                submitted=False
+            ), 400
+
+        return render_template(
+            'reverse_listing.html',
+            listing=listing,
+            submitted=True,
+            submitted_name=full_name,
+            submitted_email=email,
+            submitted_offer_price=offer_price,
+            submitted_message=message
+        )
+
+    return render_template('reverse_listing.html', listing=listing, submitted=False)
 
 
 @app.route('/add-reverse', methods=['GET', 'POST'])
@@ -170,16 +210,27 @@ def add_listing():
         price = (request.form.get('price') or '').strip()
         description = (request.form.get('description') or '').strip()
         condition = (request.form.get('condition') or '').strip()
-        photo_url = (request.form.get('photo_url') or '').strip()
+        photo_file = request.files.get('photo_file')
 
         if not name or not category or not price:
             return render_template('add_listing.html', error='Name, category, and price are required.', submitted=False), 400
 
-        if not photo_url:
+        if not photo_file or not photo_file.filename:
             return render_template('add_listing.html', error='At least one image is required.', submitted=False), 400
 
-        if not (photo_url.startswith('http://') or photo_url.startswith('https://')):
-            return render_template('add_listing.html', error='Image must be a valid URL (http/https).', submitted=False), 400
+        original_name = secure_filename(photo_file.filename)
+        _, ext = os.path.splitext(original_name)
+        ext = ext.lower()
+        allowed_exts = {'.jpg', '.jpeg', '.png', '.webp', '.gif'}
+        if ext not in allowed_exts:
+            return render_template('add_listing.html', error='Image must be jpg, jpeg, png, webp, or gif.', submitted=False), 400
+
+        upload_dir = os.path.join(app.static_folder, 'uploads')
+        os.makedirs(upload_dir, exist_ok=True)
+        stored_name = f"{uuid4().hex}{ext}"
+        stored_path = os.path.join(upload_dir, stored_name)
+        photo_file.save(stored_path)
+        photo_url = url_for('static', filename=f'uploads/{stored_name}', _external=True)
 
         try:
             table = _get_table()
@@ -275,8 +326,11 @@ def product_page(record_id):
 
 @app.route('/product/<record_id>/<action_type>', methods=['GET', 'POST'])
 def product_action(record_id, action_type):
+    # Redirect offer actions to dedicated offer page
+    if action_type == 'offer':
+        return redirect(url_for('make_offer', record_id=record_id))
+    
     action_labels = {
-        'offer': 'Make an offer',
         'buy': 'Buy the product',
         'message': 'Message seller'
     }
@@ -357,6 +411,41 @@ def message_seller(record_id):
         )
 
     return render_template('message_seller.html', record=record, seller_names=seller_names, submitted=False)
+
+@app.route('/product/<record_id>/offer', methods=['GET', 'POST'])
+def make_offer(record_id):
+    try:
+        record, seller_names = _get_product_and_sellers(record_id)
+    except Exception as e:
+        return render_template('offer.html', error=str(e), record=None, seller_names=[]), 400
+
+    if request.method == 'POST':
+        full_name = (request.form.get('full_name') or '').strip()
+        email = (request.form.get('email') or '').strip()
+        offer_price = (request.form.get('offer_price') or '').strip()
+        message = (request.form.get('message') or '').strip()
+        
+        if not full_name or not email or not offer_price:
+            return render_template(
+                'offer.html',
+                record=record,
+                seller_names=seller_names,
+                error='Name, email, and offer price are required.',
+                submitted=False
+            ), 400
+        
+        return render_template(
+            'offer.html',
+            record=record,
+            seller_names=seller_names,
+            submitted=True,
+            submitted_email=email,
+            submitted_name=full_name,
+            submitted_offer=offer_price,
+            submitted_message=message
+        )
+
+    return render_template('offer.html', record=record, seller_names=seller_names, submitted=False)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)

@@ -8,7 +8,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="min-h-screen antialiased">
+<body class="min-h-screen antialiased reverse-page">
   {% include '_sidebar.html' %}
   <div class="page-shell">
     <div class="page-content">
@@ -38,22 +38,22 @@
           </div>
 
           <div class="reverse-showcase-grid">
-            {% for req in requests %}
-            <div class="reverse-request-card">
+            {% for item in requests %}
+            <a class="reverse-request-card" href="{{ url_for('reverse_listing_page', record_id=item.id) }}">
               <div class="reverse-request-tags">
-                {% if req.get('Category') %}
-                  <span class="reverse-request-tag">{{ req['Category'] }}</span>
+                {% if item.fields.get('Category') %}
+                  <span class="reverse-request-tag">{{ item.fields['Category'] }}</span>
                 {% endif %}
               </div>
-       ˇ       <h3 class="reverse-request-title">{{ req.get('Title', 'Unnamed item') }}</h3>
+              <h3 class="reverse-request-title">{{ item.fields.get('Title', 'Unnamed item') }}</h3>
               <div class="reverse-request-footer">
                 <div class="reverse-request-budget">
                   <span>Budget</span>
-                  {% if req.get('Budget') %}€{{ req['Budget'] | int }}{% else %}Open{% endif %}
+                  {% if item.fields.get('Budget') %}€{{ item.fields['Budget'] | int }}{% else %}Open{% endif %}
                 </div>
-                <span class="reverse-request-offers">{{ req.get('BuyerName') or 'Anonymous' }}</span>
+                <span class="reverse-request-offers">{{ item.fields.get('BuyerName') or 'Anonymous' }}</span>
               </div>
-            </div>
+            </a>
             {% else %}
             <div class="reverse-request-card reverse-request-card--ghost">
               <div class="reverse-request-empty-mark">+</div>

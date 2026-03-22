@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Make an Offer – {{ record.fields.Name if record else 'Product' }} – VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased offer-page">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+    <div class="page-content">
+
+      {% if not record %}
+        <div class="wrap py-8">
+          <div class="error-box">{{ error or 'Product not found.' }}</div>
+          <div class="links mt-4"><a class="link-btn" href="/">Back to homepage</a></div>
+        </div>
+
+      {% else %}
+        {% set f = record.fields %}
+        {% set seller_display = (seller_names|join(', ')) if seller_names and seller_names|length > 0 else (f.Seller if f.Seller else 'Seller') %}
+
+        <!-- Page header -->
+        <div class="offer-header">
+          <div class="offer-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+            </svg>
+            Make an offer
+          </div>
+          <h1 class="offer-page-title">{{ f.Name or 'Untitled product' }}</h1>
+          <p class="offer-page-sub">Send the seller your offer — they'll get back to you directly.</p>
+        </div>
+
+        <div class="offer-page">
+
+          <!-- Form Card -->
+          <div class="offer-card">
+
+            {% if submitted %}
+              <div class="offer-success">
+                <div class="offer-success-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+                <div class="offer-success-title">Offer sent!</div>
+                <p class="offer-success-sub">
+                  Your offer was sent to <strong style="color: rgba(255, 255, 255, 0.72);">{{ seller_display }}</strong>.
+                  They'll reply to <strong style="color: rgba(255, 255, 255, 0.72);">{{ submitted_email }}</strong>.
+                </p>
+                <div class="offer-success-actions">
+                  <a class="offer-success-btn offer-success-btn--primary" href="{{ url_for('product_page', record_id=record.id) }}">
+                    Back to product
+                  </a>
+                  <a class="offer-success-btn offer-success-btn--secondary" href="{{ url_for('explore') }}">
+                    Browse more
+                  </a>
+                </div>
+              </div>
+
+            {% else %}
+
+              {% if error %}
+                <div class="offer-error">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  {{ error }}
+                </div>
+              {% endif %}
+
+              <form method="post" id="offerForm">
+
+                <!-- Your details -->
+                <div class="offer-form-section">
+                  <div class="ofields-row">
+                    <div class="ofield">
+                      <label for="full_name">Name <span class="required">*</span></label>
+                      <input id="full_name" name="full_name" type="text" placeholder="Jane Smith" required>
+                    </div>
+                    <div class="ofield">
+                      <label for="email">Email <span class="required">*</span></label>
+                      <input id="email" name="email" type="email" placeholder="jane@example.com" required>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="offer-divider"></div>
+
+                <!-- Your offer -->
+                <div class="offer-form-section">
+
+                  <!-- Asking price reference -->
+                  {% if f.Price is not none %}
+                  <div class="offer-asking">
+                    <span class="offer-asking-label">Asking price</span>
+                    <span class="offer-asking-price">{{ f.Price }}€</span>
+                    <span class="offer-asking-arrow">→</span>
+                    <span class="offer-your-price" id="offerPreview">—</span>
+                  </div>
+                  {% endif %}
+
+                  <div class="ofield" style="max-width: 200px;">
+                    <label for="offer_price">Your price (€)</label>
+                    <div class="ofield-price-wrap">
+                      <span class="ofield-price-symbol">€</span>
+                      <input id="offer_price" name="offer_price" type="number" min="0" placeholder="0">
+                    </div>
+                  </div>
+
+                  <div class="ofield">
+                    <label for="message">Message to seller</label>
+                    <textarea id="message" name="message" placeholder="Introduce yourself, explain your offer, or ask a question…"></textarea>
+                  </div>
+                </div>
+
+              </form>
+
+              <div class="offer-divider"></div>
+
+              <div class="offer-submit-area">
+                <button type="submit" form="offerForm" class="offer-submit-btn">
+                  Send offer
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                  </svg>
+                </button>
+                <p class="offer-submit-note">The seller will reply to your email if they accept.</p>
+              </div>
+
+            {% endif %}
+
+          </div>
+
+          <!-- Sidebar -->
+          <aside class="offer-sidebar">
+
+            <!-- Product preview -->
+            <div class="offer-product-card">
+              {% if f.Photo and f.Photo|length > 0 %}
+                {% set photo = f.Photo[0] %}
+                <img class="offer-product-img"
+                  src="{{ photo.thumbnails.large.url if photo.thumbnails and photo.thumbnails.large else photo.url }}"
+                  alt="{{ f.Name or 'Product' }}">
+              {% else %}
+                <div class="offer-product-img-placeholder">No image</div>
+              {% endif %}
+              <div class="offer-product-body">
+                <div class="offer-product-name">{{ f.Name or 'Untitled product' }}</div>
+                {% if f.Price is not none %}
+                  <div class="offer-product-price">{{ f.Price }}€</div>
+                {% endif %}
+                <div class="offer-product-meta">
+                  {% if f.Category %}<span class="offer-product-chip">{{ f.Category }}</span>{% endif %}
+                  {% if f.Condition %}<span class="offer-product-chip">{{ f.Condition }}</span>{% endif %}
+                  <span class="offer-product-chip">{{ seller_display }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- How offers work -->
+            <div class="offer-info-card">
+              <h3>How offers work</h3>
+              <div class="offer-info-steps">
+                <div class="offer-info-step">
+                  <span class="offer-info-num">1</span>
+                  <div class="offer-info-text">
+                    <strong>Send your offer</strong>
+                    <span>Name your price and add a short message to the seller.</span>
+                  </div>
+                </div>
+                <div class="offer-info-step">
+                  <span class="offer-info-num">2</span>
+                  <div class="offer-info-text">
+                    <strong>Seller reviews it</strong>
+                    <span>They'll consider your offer alongside others they've received.</span>
+                  </div>
+                </div>
+                <div class="offer-info-step">
+                  <span class="offer-info-num">3</span>
+                  <div class="offer-info-text">
+                    <strong>They contact you</strong>
+                    <span>If accepted, the seller replies to your email to arrange the deal.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <a class="offer-back" href="{{ url_for('product_page', record_id=record.id) }}">Back to product</a>
+            <a class="offer-back" href="{{ url_for('product_action', record_id=record.id, action_type='message') }}" style="margin-top: -8px;">Message seller instead</a>
+
+          </aside>
+
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/offer.js') }}"></script>
+</body>
+</html>

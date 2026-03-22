@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ listing.Title if listing else 'Buy Request' }} - VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased reverse-listing-page">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+    <div class="page-content page-content--spacious">
+
+      {% if error and not listing %}
+        <div class="wrap">
+          <div class="error-box">{{ error }}</div>
+          <div class="links mt-4"><a class="link-btn" href="/reverse">Back</a></div>
+        </div>
+
+      {% elif not listing %}
+        <div class="wrap">
+          <div class="error-box">Buy request not found.</div>
+          <div class="links mt-4"><a class="link-btn" href="/reverse">Back</a></div>
+        </div>
+
+      {% else %}
+        <div class="reverse-layout wrap">
+
+          <div class="reverse-main">
+            <a href="/reverse" class="back-link" onclick="if (window.history.length > 1) { window.history.back(); return false; }">Back</a>
+
+            <div class="reverse-hero-card">
+              <div class="reverse-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                  <path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                </svg>
+                Buy Request
+              </div>
+
+              <h1 class="reverse-title">{{ listing.Title or 'Unnamed item' }}</h1>
+
+              <div class="reverse-hero-meta">
+                <div class="reverse-budget-pill">
+                  <span class="reverse-budget-label">Budget</span>
+                  {% if listing.Budget %}
+                    <span class="reverse-budget-value">EUR {{ listing.Budget | int }}</span>
+                  {% else %}
+                    <span class="reverse-budget-value open">Open budget</span>
+                  {% endif %}
+                </div>
+                {% if listing.Category %}
+                  <span class="reverse-category-chip">{{ listing.Category }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            {% if listing.Description %}
+            <div class="reverse-desc-card">
+              <h3>Details</h3>
+              <p>{{ listing.Description }}</p>
+            </div>
+            {% endif %}
+
+            <div class="reverse-details-card">
+              <h3>Request info</h3>
+              {% if listing.Category %}
+              <div class="rdetail-row">
+                <span class="rdetail-label">Category</span>
+                <span class="rdetail-value">{{ listing.Category }}</span>
+              </div>
+              {% endif %}
+              <div class="rdetail-row">
+                <span class="rdetail-label">Budget</span>
+                <span class="rdetail-value">{% if listing.Budget %}EUR {{ listing.Budget | int }}{% else %}Open{% endif %}</span>
+              </div>
+              <div class="rdetail-row">
+                <span class="rdetail-label">Posted by</span>
+                <span class="rdetail-value">{{ listing.BuyerName or 'Anonymous' }}</span>
+              </div>
+              <div class="rdetail-row">
+                <span class="rdetail-label">Status</span>
+                <span class="rdetail-value rdetail-value-status">
+                  <span class="rdetail-status-dot"></span>
+                  Open for offers
+                </span>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="reverse-sidebar">
+            <div class="reverse-buyer-card">
+              <h3>Posted by</h3>
+              <div class="reverse-buyer-row">
+                <div class="reverse-buyer-avatar">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="8" r="4"/>
+                    <path d="M5 20c1.6-3.1 4.1-5 7-5s5.4 1.9 7 5"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="reverse-buyer-name">{{ listing.BuyerName or 'Anonymous' }}</div>
+                  <div class="reverse-buyer-sub">Looking to buy</div>
+                </div>
+              </div>
+            </div>
+
+            {% if submitted %}
+              <div class="reverse-offer-success">
+                <div class="reverse-offer-success-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+                <div>
+                  <div class="reverse-offer-success-title">Offer sent!</div>
+                  <div class="reverse-offer-success-sub">
+                    Your offer was sent as <strong class="reverse-success-strong">{{ submitted_name }}</strong>.
+                    The buyer will reach you at <strong class="reverse-success-strong">{{ submitted_email }}</strong>.
+                  </div>
+                </div>
+              </div>
+
+            {% else %}
+              <div class="reverse-form-card">
+                <h3>Send your offer</h3>
+                {% if error %}
+                  <div class="box err">{{ error }}</div>
+                {% endif %}
+                <form method="post">
+                  <div class="reverse-form-grid">
+                    <div class="rform-field">
+                      <label for="full_name">Your name</label>
+                      <input id="full_name" name="full_name" type="text" placeholder="Jane Smith" required>
+                    </div>
+                    <div class="rform-field">
+                      <label for="email">Your email</label>
+                      <input id="email" name="email" type="email" placeholder="jane@example.com" required>
+                    </div>
+                    <div class="rform-field">
+                      <label for="offer_price">Your offer price (EUR)</label>
+                      <input id="offer_price" name="offer_price" type="number" min="0" placeholder="{% if listing.Budget %}{{ listing.Budget | int }}{% else %}0{% endif %}">
+                    </div>
+                    <div class="rform-field">
+                      <label for="message">Message</label>
+                      <textarea id="message" name="message" placeholder="Describe what you have to offer..."></textarea>
+                    </div>
+                    <button class="reverse-offer-btn" type="submit">
+                      Send offer
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                      </svg>
+                    </button>
+                  </div>
+                </form>
+              </div>
+            {% endif %}
+
+            <div class="reverse-how-card">
+              <h3>How it works</h3>
+              <div class="reverse-how-steps">
+                <div class="reverse-how-step">
+                  <span class="reverse-how-num">1</span>
+                  <div class="reverse-how-text">
+                    <strong>Send your offer</strong>
+                    Fill in your details and describe what you have.
+                  </div>
+                </div>
+                <div class="reverse-how-step">
+                  <span class="reverse-how-num">2</span>
+                  <div class="reverse-how-text">
+                    <strong>Buyer reviews</strong>
+                    They'll compare all offers and pick the best one.
+                  </div>
+                </div>
+                <div class="reverse-how-step">
+                  <span class="reverse-how-num">3</span>
+                  <div class="reverse-how-text">
+                    <strong>Get contacted</strong>
+                    If chosen, the buyer will reach out directly.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</body>
+</html>

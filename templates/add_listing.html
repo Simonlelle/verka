@@ -8,55 +8,235 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="min-h-screen antialiased">
+<body class="min-h-screen antialiased add-listing-page">
   {% include '_sidebar.html' %}
   <div class="page-shell">
     <div class="page-content">
-      <div class="wrap">
-        <section class="card mx-auto max-w-2xl">
-          <h1 class="title text-2xl md:text-3xl">Add a sale listing</h1>
-          <p class="sub mt-2">Create a new product listing for the marketplace.</p>
+      <div class="listing-header">
+        <div class="listing-eyebrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 5v14"/><path d="M5 12h14"/>
+          </svg>
+          New listing
+        </div>
+        <h1 class="listing-page-title">Add a sale listing</h1>
+        <p class="listing-page-sub">List your item on the VERKA marketplace. It'll be reviewed before going live.</p>
+      </div>
 
-          {% if error %}<div class="box err">{{ error }}</div>{% endif %}
+      <div class="listing-page">
+        <div class="listing-form-card">
+
           {% if submitted %}
-            <div class="box ok">Listing created successfully.</div>
-            {% if record_id %}
-              <a class="link-btn link-btn--spaced inline-flex" href="{{ url_for('product_page', record_id=record_id) }}">View listing</a>
-            {% endif %}
-          {% endif %}
+            <div class="listing-success">
+              <div class="listing-success-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </div>
+              <div class="listing-success-title">Listing submitted!</div>
+              <p class="listing-success-sub">
+                Your listing is under review and will appear on the marketplace once approved.
+              </p>
+              <div class="listing-success-actions">
+                {% if record_id %}
+                  <a class="listing-success-btn listing-success-btn--primary" href="{{ url_for('product_page', record_id=record_id) }}">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    View listing
+                  </a>
+                {% endif %}
+                <a class="listing-success-btn listing-success-btn--secondary" href="{{ url_for('add_listing') }}">
+                  Add another
+                </a>
+                <a class="listing-success-btn listing-success-btn--secondary" href="{{ url_for('explore') }}">
+                  Browse marketplace
+                </a>
+              </div>
+            </div>
 
-        {% if not submitted %}
-        <form method="post">
-          <div class="row">
-            <label for="name">Title</label>
-            <input id="name" name="name" type="text" required>
+          {% else %}
+            {% if error %}
+              <div class="listing-error-wrap">
+                <div class="listing-error">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+                  </svg>
+                  {{ error }}
+                </div>
+              </div>
+            {% endif %}
+
+            <form method="post" id="listingForm" enctype="multipart/form-data">
+              <div class="listing-form-section">
+                <div class="lfield">
+                  <label for="name">Title <span class="required">*</span></label>
+                  <input id="name" name="name" type="text" placeholder="e.g. Sony WH-1000XM5 Headphones" required>
+                </div>
+
+                <div class="lfields-row">
+                  <div class="lfield">
+                    <label for="category">Category <span class="required">*</span></label>
+                    <select id="category" name="category" required>
+                      <option value="" disabled selected>Select category</option>
+                      <option>Electronics</option>
+                      <option>Clothing</option>
+                      <option>Furniture</option>
+                      <option>Books</option>
+                      <option>Sports</option>
+                      <option>Toys</option>
+                      <option>Vehicles</option>
+                      <option>Garden</option>
+                      <option>Tools</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div class="lfield">
+                    <label for="condition">Condition</label>
+                    <select id="condition" name="condition">
+                      <option value="" disabled selected>Select condition</option>
+                      <option>New</option>
+                      <option>Like new</option>
+                      <option>Good</option>
+                      <option>Fair</option>
+                      <option>For parts</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="lfield">
+                  <label for="description">Description</label>
+                  <textarea id="description" name="description" placeholder="Describe the item - brand, model, what's included, any flaws..."></textarea>
+                </div>
+              </div>
+
+              <div class="listing-divider"></div>
+
+              <div class="listing-form-section">
+                <div class="lfield listing-price-field">
+                  <label for="price">Price (EUR) <span class="required">*</span></label>
+                  <input id="price" name="price" type="number" min="0" placeholder="0" required>
+                </div>
+                <p class="lfield-hint listing-price-hint">Set a fair price - buyers can still make you an offer.</p>
+              </div>
+
+              <div class="listing-divider"></div>
+
+              <div class="listing-form-section listing-photo-section">
+                <div class="lfield">
+                  <label for="photo_file">Photo <span class="required">*</span></label>
+                  <input id="photo_file" name="photo_file" type="file" accept="image/*" required class="listing-file-input">
+                  <label for="photo_file" class="listing-dropzone" id="listingDropzone">
+                    <span class="listing-dropzone-icon">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                      </svg>
+                    </span>
+                    <span class="listing-dropzone-title">Drop image here or click to upload</span>
+                    <span class="listing-dropzone-sub">JPG, PNG, WEBP, GIF</span>
+                  </label>
+                </div>
+
+                <div class="image-preview-wrap" id="imagePreview">
+                  <img id="previewImg" src="" alt="Preview">
+                </div>
+              </div>
+            </form>
+
+            <div class="listing-divider"></div>
+
+            <div class="listing-submit-area">
+              <button type="submit" form="listingForm" class="listing-submit-btn">
+                Create listing
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <line x1="22" y1="2" x2="11" y2="13"/>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                </svg>
+              </button>
+              <p class="listing-submit-note">Your listing will be reviewed before appearing on the marketplace.</p>
+            </div>
+          {% endif %}
+        </div>
+
+        <aside class="listing-sidebar">
+          <div class="lsidebar-card">
+            <h3>Listing status</h3>
+            <div class="lsidebar-status">
+              <div class="lsidebar-status-dot"></div>
+              <div class="lsidebar-status-text">
+                <strong>Pending review</strong>
+                New listings are checked before going live.
+              </div>
+            </div>
           </div>
-          <div class="row">
-            <label for="category">Category</label>
-            <input id="category" name="category" type="text" required>
+
+          <div class="lsidebar-card">
+            <h3>Tips for a great listing</h3>
+            <div class="lsidebar-tips">
+              <div class="lsidebar-tip">
+                <div class="lsidebar-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
+                  </svg>
+                </div>
+                <div class="lsidebar-tip-text">
+                  <strong>Use a clear photo</strong>
+                  <span>Good lighting and a plain background make your item stand out.</span>
+                </div>
+              </div>
+              <div class="lsidebar-tip">
+                <div class="lsidebar-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"/>
+                  </svg>
+                </div>
+                <div class="lsidebar-tip-text">
+                  <strong>Write a detailed description</strong>
+                  <span>Include brand, model, age, and any flaws. Honest listings sell faster.</span>
+                </div>
+              </div>
+              <div class="lsidebar-tip">
+                <div class="lsidebar-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="1" x2="12" y2="23"/>
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                  </svg>
+                </div>
+                <div class="lsidebar-tip-text">
+                  <strong>Price it right</strong>
+                  <span>Check similar items on the marketplace to set a competitive price.</span>
+                </div>
+              </div>
+              <div class="lsidebar-tip">
+                <div class="lsidebar-tip-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 11 12 14 22 4"/>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                  </svg>
+                </div>
+                <div class="lsidebar-tip-text">
+                  <strong>Pick the right condition</strong>
+                  <span>Be honest - buyers appreciate accuracy and it avoids disputes.</span>
+                </div>
+              </div>
+            </div>
           </div>
-          <div class="row">
-            <label for="price">Price (EUR)</label>
-            <input id="price" name="price" type="number" min="0" required>
+
+          <div class="lsidebar-card lsidebar-card-cta">
+            <h3>Looking to buy instead?</h3>
+            <p class="lsidebar-cta-text">
+              Post a buy request and let sellers come to you.
+            </p>
+            <a href="{{ url_for('add_reverse') }}" class="lsidebar-cta-link">
+              Post a buy request ->
+            </a>
           </div>
-          <div class="row">
-            <label for="condition">Condition</label>
-            <input id="condition" name="condition" type="text" placeholder="New, used, like new">
-          </div>
-          <div class="row">
-            <label for="description">Description</label>
-            <textarea id="description" name="description" placeholder="Describe the item"></textarea>
-          </div>
-          <div class="row">
-            <label for="photo_url">Image URL (required)</label>
-            <input id="photo_url" name="photo_url" type="url" placeholder="https://example.com/photo.jpg" required>
-          </div>
-          <button type="submit" class="btn-submit">Create listing</button>
-        </form>
-        {% endif %}
-      </section>
+        </aside>
       </div>
     </div>
   </div>
+
+  <script src="{{ url_for('static', filename='js/add_listing.js') }}"></script>
 </body>
 </html>
