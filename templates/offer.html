@@ -21,7 +21,7 @@
 
       {% else %}
         {% set f = record.fields %}
-        {% set seller_display = (seller_names|join(', ')) if seller_names and seller_names|length > 0 else (f.Seller if f.Seller else 'Seller') %}
+        {% set seller_display = (seller_names | join(', ')) if seller_names else (f.Seller or 'Seller') %}
 
         <!-- Page header -->
         <div class="offer-header">
@@ -108,7 +108,7 @@
                     <label for="offer_price">Your price (€)</label>
                     <div class="ofield-price-wrap">
                       <span class="ofield-price-symbol">€</span>
-                      <input id="offer_price" name="offer_price" type="number" min="0" placeholder="0">
+                      <input id="offer_price" name="offer_price" type="number" min="0" placeholder="0" required>
                     </div>
                   </div>
 
@@ -192,7 +192,7 @@
 
             <!-- Actions -->
             <a class="offer-back" href="{{ url_for('product_page', record_id=record.id) }}">Back to product</a>
-            <a class="offer-back offer-back-tight" href="{{ url_for('product_action', record_id=record.id, action_type='message') }}">Message seller instead</a>
+            <a class="offer-back offer-back-tight" href="{{ url_for('message_seller', record_id=record.id) }}">Message seller instead</a>
 
           </aside>
 
