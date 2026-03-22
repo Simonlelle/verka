@@ -1,0 +1,30 @@
+# Environment variables — never commit secrets
+.env
+.env.*
+!.env.example
+
+# Python virtual environment
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+Icon?
+
+# VS Code
+.vscode/
+
+# Editor swap files
+*.swp
+*.swo
+
+# Logs
+*.log
