@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, make_response, redirect, url_for
+from flask import Flask, jsonify, make_response, render_template, request, url_for
 import os
 from uuid import uuid4
 from dotenv import load_dotenv
@@ -17,6 +17,7 @@ AIRTABLE_BASE_ID = os.getenv('AIRTABLE_BASE_ID')
 AIRTABLE_TABLE_ID = os.getenv('AIRTABLE_TABLE_ID')
 AIRTABLE_REVERSE_URL = os.getenv('AIRTABLE_REVERSE_URL', '').strip()
 AIRTABLE_REVERSE_ID = os.getenv('AIRTABLE_REVERSE_ID', '').strip()
+AIRTABLE_USERS_TABLE_ID = os.getenv('AIRTABLE_USERS_TABLE_ID', '').strip()
 
 
 def _require_env(*keys):
@@ -65,9 +66,14 @@ def _reverse_table():
 
 
 def _get_buyer_name_lookup():
-    try:
-        # Reverse requests currently store buyer display values directly.
+    if not AIRTABLE_USERS_TABLE_ID:
         return {}
+    try:
+        users_tbl = Api(AIRTABLE_API_KEY).table(AIRTABLE_BASE_ID, AIRTABLE_USERS_TABLE_ID)
+        return {
+            user['id']: user.get('fields', {}).get('Name', '')
+            for user in users_tbl.all(fields=['Name'])
+        }
     except Exception:
         return {}
 
@@ -104,13 +110,18 @@ def _get_product_and_sellers(record_id):
     table = _products_table()
     record = table.get(record_id)
     seller_value = record.get('fields', {}).get('Seller')
+    seller_names = []
 
     if isinstance(seller_value, list):
-        seller_names = [str(s) for s in seller_value if s]
+        for sid in seller_value:
+            try:
+                srec = table.get(sid)
+                sname = srec.get('fields', {}).get('Name')
+                seller_names.append(sname if sname else str(sid))
+            except Exception:
+                seller_names.append(str(sid))
     elif seller_value:
         seller_names = [str(seller_value)]
-    else:
-        seller_names = []
 
     return record, seller_names
 
@@ -136,7 +147,9 @@ def reverse_marketplace():
     reverse_url = _get_reverse_marketplace_url()
     if reverse_url:
         if reverse_url.startswith('http://') or reverse_url.startswith('https://'):
-            return redirect(reverse_url)
+            resp = make_response('', 302)
+            resp.headers['Location'] = reverse_url
+            return resp
         return make_response('Invalid AIRTABLE_REVERSE_URL. Use http:// or https://', 500)
 
     try:

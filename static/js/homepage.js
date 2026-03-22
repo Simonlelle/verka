@@ -43,8 +43,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function createProductCard(record) {
         const fields = record.fields;
-        const card = document.createElement('div');
+        const card = document.createElement('a');
         card.className = 'product-card';
+        card.href = '/product/' + encodeURIComponent(record.id);
 
         const name = escapeHtml(fields.Name || 'Untitled');
 
@@ -80,10 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-
-        card.addEventListener('click', () => {
-            window.location.href = '/product/' + encodeURIComponent(record.id);
-        });
 
         const saveButton = card.querySelector('.product-save');
         if (saveButton) {
@@ -159,7 +156,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderReverseCards(records) {
         reverseGrid.innerHTML = '';
 
-        records.slice(0, 5).forEach(record => {
+        records.slice(0, 4).forEach(record => {
             const f = record.fields;
             const name = escapeHtml(f.Title || f.Name || 'Unnamed item');
             const buyer = escapeHtml(f.BuyerName || '');
