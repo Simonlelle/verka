@@ -8,137 +8,138 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="min-h-screen antialiased">
+<body class="min-h-screen antialiased explore-page">
   {% include '_sidebar.html' %}
   <div class="page-shell">
     <div class="page-content">
-      <div class="wrap space-y-4">
-        <div class="explore-toolbar">
-          <h1 class="page-title text-2xl md:text-3xl">Explore all products</h1>
-          <div class="explore-search">
+      <div class="explore-header">
+        <span class="explore-eyebrow">Marketplace</span>
+        <h1 class="explore-title">Explore all products</h1>
+        <p class="explore-sub">{{ records|length }} listing{{ 's' if records|length != 1 else '' }} available</p>
+      </div>
+
+      {% if error %}
+        <div class="wrap"><div class="error-box">{{ error }}</div></div>
+      {% endif %}
+
+      <div class="explore-filters">
+        <div class="explore-search-row">
+          <div class="explore-search-wrap">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="7"/>
-              <path d="m21 21-4.35-4.35"/>
+              <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <input id="exploreSearch" type="text" placeholder="Search products...">
+            <input
+              id="exploreSearch"
+              class="explore-search-input"
+              type="text"
+              placeholder="Search products…"
+              autocomplete="off"
+            >
+            <button class="explore-search-clear" id="searchClear" title="Clear search">✕</button>
+          </div>
+          <select class="explore-sort" id="exploreSort">
+            <option value="default">Sort: Default</option>
+            <option value="price-asc">Price: Low → High</option>
+            <option value="price-desc">Price: High → Low</option>
+            <option value="name-asc">Name: A → Z</option>
+            <option value="name-desc">Name: Z → A</option>
+          </select>
+        </div>
+
+        <div class="explore-category-row" id="categoryRow">
+          <button class="cat-pill active" data-cat="all">All</button>
+          {% set categories = [] %}
+          {% for record in records %}
+            {% set cat = record.fields.get('Category', '') %}
+            {% if cat and cat not in categories %}
+              {% set _ = categories.append(cat) %}
+            {% endif %}
+          {% endfor %}
+          {% for cat in categories | sort %}
+            <button class="cat-pill" data-cat="{{ cat }}">{{ cat }}</button>
+          {% endfor %}
+        </div>
+
+        <div class="explore-price-row">
+          <span class="price-range-label">Price</span>
+          <div class="price-input-wrap">
+            <input class="price-input" id="priceMin" type="number" min="0" placeholder="Min €">
+            <span class="price-sep">—</span>
+            <input class="price-input" id="priceMax" type="number" min="0" placeholder="Max €">
           </div>
         </div>
-        {% if error %}
-          <div class="error-box">{{ error }}</div>
-        {% endif %}
-        <div class="explore-grid">
-          {% for record in records %}
-            {% set f = record.fields %}
-            <a class="product-card explore-card" href="{{ url_for('product_page', record_id=record.id) }}" data-record-id="{{ record.id }}" data-name="{{ (f.Name or '')|lower }}" data-category="{{ (f.Category or '')|lower }}">
-              <div class="product-name-ribbon">
-                <p class="product-name">{{ f.Name or 'Untitled product' }}</p>
-              </div>
+      </div>
 
-              <div class="product-thumb">
-                {% if f.Photo and f.Photo|length > 0 %}
-                  {% set photo = f.Photo[0] %}
-                  <img src="{{ photo.thumbnails.large.url if photo.thumbnails and photo.thumbnails.large else photo.url }}" alt="{{ f.Name or 'Product' }}">
-                {% else %}
-                  <div class="product-thumb-placeholder"><span>No image</span></div>
-                {% endif %}
-              </div>
+      <div class="explore-results-bar">
+        <span class="explore-results-count"><strong id="resultsCount">{{ records|length }}</strong> results</span>
+        <button class="explore-clear-all" id="clearAll">Clear all filters</button>
+      </div>
 
-              <div class="product-info">
-                <button class="product-save" type="button" aria-label="Save item">
+      <div class="explore-grid" id="exploreGrid">
+        {% for record in records %}
+          {% set f = record.fields %}
+          <a
+            class="explore-card"
+            href="{{ url_for('product_page', record_id=record.id) }}"
+            data-record-id="{{ record.id }}"
+            data-name="{{ (f.Name or '') | lower }}"
+            data-category="{{ (f.Category or '') | lower }}"
+            data-category-raw="{{ f.Category or '' }}"
+            data-price="{{ f.Price if f.Price is not none else '' }}"
+          >
+            {% if f.Photo and f.Photo|length > 0 %}
+              {% set photo = f.Photo[0] %}
+              <img
+                class="explore-card-img"
+                src="{{ photo.thumbnails.large.url if photo.thumbnails and photo.thumbnails.large else photo.url }}"
+                alt="{{ f.Name or 'Product' }}"
+                loading="lazy"
+              >
+            {% else %}
+              <div class="explore-card-img-placeholder">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/>
+                  <polyline points="21 15 16 10 5 21"/>
+                </svg>
+              </div>
+            {% endif %}
+
+            <div class="explore-card-body">
+              {% if f.Category %}
+                <span class="explore-card-category">{{ f.Category }}</span>
+              {% endif %}
+              <span class="explore-card-name">{{ f.Name or 'Untitled product' }}</span>
+              <div class="explore-card-footer">
+                <span class="explore-card-price">
+                  {% if f.Price is not none %}{{ f.Price }}€{% else %}—{% endif %}
+                </span>
+                <button
+                  class="explore-card-save"
+                  type="button"
+                  aria-label="Save item"
+                  data-id="{{ record.id }}"
+                >
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
                   </svg>
                 </button>
-                <div class="product-prices">
-                  <span class="product-price">{% if f.Price is not none %}{{ f.Price }}€{% else %}N/A{% endif %}</span>
-                </div>
               </div>
-            </a>
-          {% endfor %}
+            </div>
+          </a>
+        {% endfor %}
+
+        <div class="explore-empty" id="emptyState">
+          <div class="explore-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+          </div>
+          <h3>No products found</h3>
+          <p>Try adjusting your search or filters.</p>
         </div>
       </div>
     </div>
   </div>
-  <script>
-    const SAVED_KEY = 'verka_saved_items';
-    const searchInput = document.getElementById('exploreSearch');
-    const cards = Array.from(document.querySelectorAll('.explore-card'));
-    const saveButtons = Array.from(document.querySelectorAll('.explore-card .product-save'));
-
-    const savedIds = new Set(getSavedIds());
-    cards.forEach((card) => {
-      const recordId = card.getAttribute('data-record-id');
-      const saveButton = card.querySelector('.product-save');
-      if (recordId && saveButton && savedIds.has(recordId)) {
-        saveButton.classList.add('is-saved');
-      }
-    });
-
-    const applyFilter = (rawValue) => {
-      const term = (rawValue || '').trim().toLowerCase();
-      cards.forEach((card) => {
-        const name = card.getAttribute('data-name') || '';
-        const category = card.getAttribute('data-category') || '';
-        const match = name.includes(term) || category.includes(term);
-        card.style.display = match ? '' : 'none';
-      });
-    };
-
-    if (searchInput) {
-      searchInput.addEventListener('input', (e) => {
-        applyFilter(e.target.value);
-      });
-
-      const params = new URLSearchParams(window.location.search);
-      const initialQuery = params.get('q') || '';
-      if (initialQuery) {
-        searchInput.value = initialQuery;
-      }
-      applyFilter(initialQuery);
-    }
-
-    saveButtons.forEach((button) => {
-      button.addEventListener('click', (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const card = button.closest('.explore-card');
-        const recordId = card ? card.getAttribute('data-record-id') : '';
-        if (!recordId) return;
-
-        const ids = getSavedIds();
-        const isAlreadySaved = ids.includes(recordId);
-
-        if (isAlreadySaved) {
-          setSavedIds(ids.filter((id) => id !== recordId));
-          button.classList.remove('is-saved');
-        } else {
-          setSavedIds([...ids, recordId]);
-          button.classList.add('is-saved');
-        }
-      });
-
-      button.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          button.click();
-        }
-      });
-    });
-
-    function getSavedIds() {
-      try {
-        const raw = localStorage.getItem(SAVED_KEY);
-        const parsed = raw ? JSON.parse(raw) : [];
-        return Array.isArray(parsed) ? parsed : [];
-      } catch {
-        return [];
-      }
-    }
-
-    function setSavedIds(ids) {
-      localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
-    }
-  </script>
+  <script src="{{ url_for('static', filename='js/explore.js') }}"></script>
 </body>
 </html>
