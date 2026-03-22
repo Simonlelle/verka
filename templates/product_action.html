@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ action_label }} - {{ record.fields.Name if record else 'Product' }} - VERKA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased">
+    {% include '_sidebar.html' %}
+    <div class="page-shell">
+        <div class="page-content page-content--spacious">
+            <div class="wrap space-y-4">
+                {% if error %}
+                    <div class="error-box">{{ error }}</div>
+                {% endif %}
+
+                {% if record %}
+                    <h1 class="action-title">{{ action_label }}</h1>
+                    <p class="muted-note action-subtitle">Product: {{ record.fields.Name or 'Untitled product' }}</p>
+
+                    {% if submitted %}
+                        <div class="success-box">
+                            Request sent successfully.<br>
+                            Name: {{ submitted_name }}<br>
+                            Email: {{ submitted_email }}<br>
+                            {% if submitted_message %}Message: {{ submitted_message }}{% endif %}
+                        </div>
+                    {% else %}
+                        <form method="post">
+                            <div class="action-row">
+                                <label for="full_name">Your name</label>
+                                <input id="full_name" name="full_name" type="text" required>
+                            </div>
+                            <div class="action-row">
+                                <label for="email">Your email</label>
+                                <input id="email" name="email" type="email" required>
+                            </div>
+                            <div class="action-row">
+                                <label for="message">Message</label>
+                                <textarea id="message" name="message" placeholder="Write your message"></textarea>
+                            </div>
+                            <button class="action-btn" type="submit">Submit</button>
+                        </form>
+                    {% endif %}
+
+                    <div class="links">
+                        <a class="link-btn" href="{{ url_for('product_page', record_id=record.id) }}">Back to product</a>
+                        <a class="link-btn" href="/">Back to homepage</a>
+                    </div>
+                {% else %}
+                    <div class="error-box">Product not found.</div>
+                    <div class="links">
+                        <a class="link-btn" href="/">Back to homepage</a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

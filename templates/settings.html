@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+    <div class="page-content">
+      <div class="wrap">
+        <section class="card mx-auto max-w-xl">
+          <h1 class="title text-2xl md:text-3xl">Settings</h1>
+          <p class="muted-note mt-2">Account and app settings page.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

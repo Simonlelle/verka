@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reverse Marketplace - VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+    <div class="page-content">
+      <div class="wrap space-y-6">
+
+        <div class="reverse-intro-banner rounded-2xl">
+          <span class="reverse-intro-label">Reverse <em>Marketplace</em></span>
+          <div class="reverse-intro-divider"></div>
+          <ul class="reverse-intro-chips">
+            <li class="reverse-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+              Post what you want
+            </li>
+            <li class="reverse-chip">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+              Sellers reach out to you
+            </li>
+          </ul>
+          <a href="{{ url_for('add_reverse') }}" class="reverse-intro-cta">+ Post a request</a>
+        </div>
+
+        <div class="cta-band pt-3">
+          <div class="reverse-showcase-header">
+            <span class="reverse-section-label">Active requests</span>
+            <h2 class="reverse-showcase-title">What buyers are looking for</h2>
+            <p class="reverse-showcase-subtitle">These buyers are waiting for your offer. Got what they need? Reach out directly.</p>
+          </div>
+
+          <div class="reverse-showcase-grid">
+            {% for req in requests %}
+            <div class="reverse-request-card">
+              <div class="reverse-request-tags">
+                {% if req.get('Category') %}
+                  <span class="reverse-request-tag">{{ req['Category'] }}</span>
+                {% endif %}
+              </div>
+              <h3 class="reverse-request-title">{{ req.get('Title', 'Unnamed item') }}</h3>
+              <div class="reverse-request-footer">
+                <div class="reverse-request-budget">
+                  <span>Budget</span>
+                  {% if req.get('Budget') %}€{{ req['Budget'] | int }}{% else %}Open{% endif %}
+                </div>
+                <span class="reverse-request-offers">{{ req.get('BuyerName') or 'Anonymous' }}</span>
+              </div>
+            </div>
+            {% else %}
+            <div class="reverse-request-card reverse-request-card--ghost">
+              <div class="reverse-request-empty-mark">+</div>
+              <p class="reverse-request-note">No requests yet. Be the first to post what you're looking for!</p>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</body>
+</html>

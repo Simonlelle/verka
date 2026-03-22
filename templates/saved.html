@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saved Items - VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+    <div class="page-content">
+      <div class="wrap">
+        <div class="section-header mb-4">
+          <h1 class="page-title mb-0">Saved items</h1>
+        </div>
+        <p id="savedEmpty" class="muted-note mb-4 hidden">You have no saved products yet.</p>
+        <div id="savedGrid" class="other-grid"></div>
+      </div>
+    </div>
+  </div>
+  <script src="{{ url_for('static', filename='js/saved.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ record.fields.Name if record else 'Product' }} - VERKA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased">
+    {% include '_sidebar.html' %}
+    <div class="page-shell">
+        <div class="page-content page-content--spacious">
+            <div class="wrap space-y-4">
+                <a href="/" class="back-link">← Back to marketplace</a>
+            </div>
+
+            {% if error %}
+                <div class="error-box">Error: {{ error }}</div>
+            {% elif record %}
+                {% set f = record.fields %}
+                {% set seller_display = (seller_names|join(', ')) if seller_names and seller_names|length > 0 else (f.Seller if f.Seller else '-') %}
+                {% set condition_display = f.Condition if f.Condition else '-' %}
+
+                <section class="product-layout">
+                    <div class="product-media">
+                        {% if f.Photo and f.Photo|length > 0 %}
+                            {% set photo = f.Photo[0] %}
+                            <img src="{{ photo.thumbnails.large.url if photo.thumbnails and photo.thumbnails.large else photo.url }}" alt="{{ f.Name or 'Product image' }}">
+                        {% else %}
+                            <div class="product-media-placeholder">No photo available</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="product-panel">
+                        <h1 class="product-title">{{ f.Name or 'Untitled product' }}</h1>
+                        <p class="product-price">{{ f.Price if f.Price is not none else '-' }}€</p>
+
+                        <div class="product-meta">
+                            <div class="meta-row">
+                                <span class="meta-label">Seller</span>
+                                <span class="meta-value">{{ seller_display }}</span>
+                            </div>
+                            <div class="meta-row">
+                                <span class="meta-label">Condition</span>
+                                <span class="meta-value">{{ condition_display }}</span>
+                            </div>
+                        </div>
+
+                        <div class="product-description">
+                            <h3>Description</h3>
+                            <p>{{ f.Description if f.Description else 'No description provided.' }}</p>
+                        </div>
+
+                        <div class="product-actions">
+                            <a class="action-btn action-secondary" href="{{ url_for('product_action', record_id=record.id, action_type='offer') }}">Make an offer</a>
+                            <a class="action-btn action-primary" href="{{ url_for('product_action', record_id=record.id, action_type='buy') }}">Buy the product</a>
+                            <a class="action-btn action-secondary" href="{{ url_for('product_action', record_id=record.id, action_type='message') }}">Message seller</a>
+                        </div>
+                    </div>
+                </section>
+            {% else %}
+                <div class="error-box">Product is not available.</div>
+            {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

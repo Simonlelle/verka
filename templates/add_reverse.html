@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post a Buy Request - VERKA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="min-h-screen antialiased">
+  {% include '_sidebar.html' %}
+  <div class="page-shell">
+    <div class="page-content">
+      <div class="wrap">
+        <section class="card mx-auto max-w-2xl">
+          <h1 class="title text-2xl md:text-3xl">Post a buy request</h1>
+          <p class="sub mt-2">Tell sellers what you're looking for and they'll contact you.</p>
+
+          {% if error %}<div class="box err">{{ error }}</div>{% endif %}
+          {% if submitted %}
+            <div class="box ok">Your request has been posted!</div>
+            <a class="link-btn link-btn--spaced inline-flex" href="{{ url_for('reverse_marketplace') }}">View all requests</a>
+          {% endif %}
+
+          {% if not submitted %}
+          <form method="post">
+            <div class="row">
+              <label for="buyer_name">Your name</label>
+              <input id="buyer_name" name="buyer_name" type="text">
+            </div>
+            <div class="row">
+              <label for="item_name">What do you want to buy?</label>
+              <input id="item_name" name="item_name" type="text" required>
+            </div>
+            <div class="row">
+              <label for="category">Category</label>
+              <input id="category" name="category" type="text" placeholder="e.g. Electronics, Clothing...">
+            </div>
+            <div class="row">
+              <label for="budget">Budget (€)</label>
+              <input id="budget" name="budget" type="number" min="0">
+            </div>
+            <div class="row">
+              <label for="details">Details</label>
+              <textarea id="details" name="details" placeholder="Brand, model, condition..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Post buy request</button>
+          </form>
+          {% endif %}
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
