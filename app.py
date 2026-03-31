@@ -15,7 +15,6 @@ app.secret_key = os.getenv('SECRET_KEY', 'change-me-in-production')
 AIRTABLE_API_KEY = os.getenv('AIRTABLE_API_KEY')
 AIRTABLE_BASE_ID = os.getenv('AIRTABLE_BASE_ID')
 AIRTABLE_TABLE_ID = os.getenv('AIRTABLE_TABLE_ID')
-AIRTABLE_REVERSE_URL = os.getenv('AIRTABLE_REVERSE_URL', '').strip()
 AIRTABLE_REVERSE_ID = os.getenv('AIRTABLE_REVERSE_ID', '').strip()
 AIRTABLE_USERS_TABLE_ID = os.getenv('AIRTABLE_USERS_TABLE_ID', '').strip()
 
@@ -32,13 +31,6 @@ def _form(key):
 
 def _render_error(template, error, **ctx):
     return render_template(template, error=str(error), **ctx), 400
-
-
-def _get_reverse_marketplace_url():
-    # Only redirect if an explicit share URL is configured.
-    # AIRTABLE_REVERSE_ID is an internal API table ID, not a public URL.
-    return AIRTABLE_REVERSE_URL if AIRTABLE_REVERSE_URL else ''
-
 
 def _record_payload(record):
     return {
@@ -143,15 +135,6 @@ def explore():
 
 
 @app.route('/reverse', methods=['GET'])
-def reverse_marketplace():
-    reverse_url = _get_reverse_marketplace_url()
-    if reverse_url:
-        if reverse_url.startswith('http://') or reverse_url.startswith('https://'):
-            resp = make_response('', 302)
-            resp.headers['Location'] = reverse_url
-            return resp
-        return make_response('Invalid AIRTABLE_REVERSE_URL. Use http:// or https://', 500)
-
     try:
         requests = _get_reverse_items()
         return render_template('reverse.html', requests=requests)
