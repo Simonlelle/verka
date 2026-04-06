@@ -333,7 +333,10 @@ nav {
   width: 100%;
   min-height: 100vh;
   text-align: center;
-  background: radial-gradient(circle, #e6330040 10%, rgba(200, 32, 0, 0.1) 40%, transparent 50%);
+  background-image: url('/static/images/bg%20image.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -346,15 +349,25 @@ nav {
 .hero::before {
   content: '';
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  
-  border-radius: 50%;
-  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(28, 0, 0, 0.5);
+  z-index: 0;
   pointer-events: none;
+}
+
+body.home-page .hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 220px;
+  background: linear-gradient(to bottom, transparent, #280905);
+  pointer-events: none;
+  z-index: 1;
 }
 
 
@@ -383,6 +396,7 @@ nav {
   max-width: 560px;
   margin: 0;
   transition: transform 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  z-index: 2;
 }
 
 .hero .group:has(.input:active) {
@@ -396,9 +410,9 @@ nav {
   padding: 12px;
   padding-left: 2.5rem;
   border-radius: 12px;
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
+border: 1.5px solid rgba(118, 118, 118, 0.4);
   outline: none;
-  background-color: rgba(255, 255, 255, 0.07);
+  background-color: rgba(255, 255, 255, 0.15);
   color: var(--white);
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
   box-shadow: 0px 0px 20px -18px;
@@ -409,7 +423,7 @@ nav {
 }
 
 .hero .group .input:hover {
-  border: 1.5px solid rgba(255, 255, 255, 0.32);
+  border: 1.5px solid rgba(118, 118, 118, 0.8);
   box-shadow: 0px 0px 20px -17px;
 }
 
@@ -418,8 +432,8 @@ nav {
 }
 
 .hero .group .input:focus {
-  border: 1.5px solid rgba(255, 255, 255, 0.6);
-  background-color: rgba(255, 255, 255, 0.11);
+  border: 1.5px solid rgba(118, 118, 118, 0.8);
+  background-color: rgba(255, 255, 255, 0.2);
 }
 
 .hero .group .icon {
@@ -1568,26 +1582,20 @@ body.product-page .page-content--spacious .wrap {
    HOME PAGE ONLY
 ══════════════════════════════════════════ */
 body.home-page .hero {
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 40%, rgba(230, 51, 0, 0.18) 0%, transparent 70%),
-    radial-gradient(ellipse 30% 30% at 20% 80%, rgba(200, 32, 0, 0.08) 0%, transparent 60%),
-    #280905;
-  min-height: calc(100svh - 34px);
-  height: calc(100svh - 34px);
-  padding-top: clamp(28px, 8vh, 86px);
-  padding-bottom: clamp(86px, 18vh, 150px);
+  min-height: 100svh;
+  padding-top: 5vh;
+  padding-bottom: 10vh;
 }
 
 @supports not (height: 100svh) {
   body.home-page .hero {
-    min-height: calc(100vh - 34px);
-    height: calc(100vh - 34px);
+    min-height: 100vh;
   }
 }
 
 body.home-page .hero h1 {
   font-family: 'Krona One', sans-serif;
-  font-size: clamp(44px, 8vw, 118px);
+  font-size: clamp(40px, 6vw, 80px);
   line-height: 0.94;
   letter-spacing: -1px;
   text-shadow: 0 2px 60px rgba(230, 51, 0, 0.18);
@@ -1613,6 +1621,11 @@ body.home-page .hero-orb {
 @keyframes orb-pulse {
   0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
   50% { transform: translate(-50%, -50%) scale(1.12); opacity: 0.7; }
+}
+
+@keyframes wm-scale {
+  0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-8deg); }
+  50%      { transform: translate(-50%, -50%) scale(1.06) rotate(-8deg); }
 }
 
 body.home-page .hero-scroll-hint {
@@ -1644,6 +1657,25 @@ body.home-page .hero-scroll-hint svg {
 @keyframes hint-fade {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 1; }
+}
+
+@keyframes hero-gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes orb-drift {
+  0%   { transform: translate(-50%, -50%) scale(1);    opacity: 0.7; }
+  33%  { transform: translate(-40%, -60%) scale(1.15); opacity: 1;   }
+  66%  { transform: translate(-60%, -45%) scale(0.95); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.7; }
 }
 
 body.home-page .section-header {
