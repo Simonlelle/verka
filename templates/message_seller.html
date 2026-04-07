@@ -60,7 +60,7 @@
               </div>
               <div>
                 <div class="msg-seller-label">Seller</div>
-                <div class="msg-seller-name">{{ seller_display }}</div>
+                <div class="msg-seller-name">{{ (f["Seller Name"] | join(', ')) or '-' }}</div>
               </div>
             </div>
 
@@ -101,7 +101,7 @@
               </svg>
             </div>
             <div>
-              <div class="msg-topbar-name">{{ seller_display }}</div>
+              <div class="msg-topbar-name">{{ (f["Seller Name"] | join(', ')) or '-' }}</div>
               <div class="msg-topbar-sub"><span class="msg-online-dot"></span>Usually replies within a few hours</div>
             </div>
             <div class="msg-topbar-pill">
@@ -123,7 +123,7 @@
             <!-- Seller intro bubble -->
             <div class="chat chat-start">
               <div class="chat-header">
-                {{ seller_display }}
+                {{ (f["Seller Name"] | join(', ')) or '-' }}
                 <time class="text-xs opacity-50">Just now</time>
               </div>
               <div class="chat-bubble">

@@ -39,7 +39,7 @@
                         <div class="product-meta">
                             <div class="meta-row">
                                 <span class="meta-label">Seller</span>
-                                <span class="meta-value">{{ seller_display }}</span>
+                                <span class="meta-value">{{ (f["Seller Name"] | join(', ')) or '-' }}</span>
                             </div>
                             <div class="meta-row">
                                 <span class="meta-label">Condition</span>
@@ -53,8 +53,8 @@
                         </div>
 
                         <div class="product-actions">
-                            <a class="action-btn action-secondary" href="{{ url_for('make_offer', record_id=record.id) }}">Make an offer</a>
-                            <a class="action-btn action-primary" href="{{ url_for('buy_product', record_id=record.id) }}">Buy the product</a>
+                            <a class="action-btn action-primary" href="{{ url_for('make_offer', record_id=record.id) }}">Make an offer</a>
+                            <!--<a class="action-btn action-primary" href="{{ url_for('buy_product', record_id=record.id) }}">Buy the product</a> -->
                             <a class="action-btn action-secondary" href="{{ url_for('message_seller', record_id=record.id) }}">Message seller</a>
                         </div>
                     </div>
