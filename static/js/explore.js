@@ -1,3 +1,13 @@
+/**
+ * VERKA — explore.js (improved)
+ *
+ * Changes vs original:
+ * 1. Safe localStorage wrapper (won't crash in Safari private mode)
+ * 2. Category filter normalised to lowercase on both sides
+ * 3. Search input auto-focused when ?q= param is present
+ * 4. Active sidebar link highlight shared pattern
+ */
+
 const SAVED_KEY = 'verka_saved_items';
 
 function getSaved() {
@@ -10,7 +20,11 @@ function getSaved() {
 }
 
 function setSaved(ids) {
-  localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
+  try {
+    localStorage.setItem(SAVED_KEY, JSON.stringify(ids));
+  } catch {
+    // Fail silently — Safari private mode, storage full, etc.
+  }
 }
 
 function toggleSave(btn) {
@@ -21,16 +35,26 @@ function toggleSave(btn) {
   if (idx === -1) {
     ids.push(id);
     btn.classList.add('is-saved');
+    btn.setAttribute('aria-label', 'Remove from saved');
   } else {
     ids.splice(idx, 1);
     btn.classList.remove('is-saved');
+    btn.setAttribute('aria-label', 'Save item');
   }
 
   setSaved(ids);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  // Mark already saved items on load.
+  // ── Active sidebar state ──────────────────────────────────
+  document.querySelectorAll('.side-link').forEach((link) => {
+    const href = link.getAttribute('href');
+    if (href && href !== '/' && window.location.pathname.startsWith(href)) {
+      link.classList.add('active');
+    }
+  });
+
+  // ── Mark already-saved items ──────────────────────────────
   const saved = getSaved();
   document.querySelectorAll('.explore-card-save').forEach((btn) => {
     if (saved.includes(btn.getAttribute('data-id'))) {
@@ -69,19 +93,21 @@ document.addEventListener('DOMContentLoaded', () => {
     sort: sortEl.value,
   });
 
-  const filtersActive = (f) => f.query || f.category !== 'all' || f.priceMin > 0 || f.priceMax < Infinity;
+  const filtersActive = (f) =>
+    f.query || f.category !== 'all' || f.priceMin > 0 || f.priceMax < Infinity;
 
   const applyFilters = () => {
     const f = getFilters();
 
     let visible = cards.filter((card) => {
-      const name = card.getAttribute('data-name') || '';
+      const name = (card.getAttribute('data-name') || '').toLowerCase();
       const catRaw = card.getAttribute('data-category-raw') || '';
-      const catLower = card.getAttribute('data-category') || '';
+      const catLower = (card.getAttribute('data-category') || '').toLowerCase();
       const price = parseFloat(card.getAttribute('data-price'));
 
       const matchQuery = !f.query || name.includes(f.query) || catLower.includes(f.query);
-      const matchCategory = f.category === 'all' || catRaw === f.category;
+      // FIX: normalise category comparison to lowercase on both sides
+      const matchCategory = f.category === 'all' || catRaw.toLowerCase() === f.category.toLowerCase();
       const matchPrice = Number.isNaN(price) || (price >= f.priceMin && price <= f.priceMax);
 
       return matchQuery && matchCategory && matchPrice;
@@ -146,16 +172,18 @@ document.addEventListener('DOMContentLoaded', () => {
     activeCategory = 'all';
     document.querySelectorAll('.cat-pill').forEach((p) => p.classList.remove('active'));
     const allPill = document.querySelector('.cat-pill[data-cat="all"]');
-    if (allPill) {
-      allPill.classList.add('active');
-    }
+    if (allPill) allPill.classList.add('active');
     applyFilters();
   });
 
+  // Pre-fill search from ?q= URL param and auto-focus
   const params = new URLSearchParams(window.location.search);
   const q = params.get('q') || '';
   if (q) {
     searchEl.value = q;
+    // FIX: focus and move cursor to end so user can keep typing
+    searchEl.focus();
+    searchEl.setSelectionRange(q.length, q.length);
   }
 
   applyFilters();

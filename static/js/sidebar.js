@@ -56,3 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 });
+
+// Highlight active sidebar link
+const currentPath = window.location.pathname;
+const sideLinks = document.querySelectorAll('.side-link');
+
+sideLinks.forEach(link => {
+  if (link.getAttribute('href') === currentPath) {
+    link.classList.add('active');
+  }
+});

@@ -4,10 +4,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verka</title>
+  <title>Verka — Buy & sell second-hand, the smart way</title>
+  <meta name="description" content="VERKA is a reverse marketplace where buyers post what they need and sellers come to them.">
   <link href="https://fonts.googleapis.com/css2?family=Krona+One&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/improvements.css') }}">
 </head>
 
 <body class="min-h-screen antialiased home-page">
@@ -16,17 +18,21 @@
   <div class="page-shell">
 
     <div class="hero" id="home">
+      <div class="hero-orb"></div>
       <h1>BECAUSE OLD<br>MARKETPLACES<br>ARE… OLD</h1>
 
       <div class="group hero-search">
         <svg class="icon" aria-hidden="true" viewBox="0 0 24 24">
           <g>
-            <path
-              d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z">
-            </path>
+            <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
           </g>
         </svg>
-        <input placeholder="Search" type="search" class="input">
+        <input placeholder="Search listings…" type="search" class="input" name="q" aria-label="Search listings">
+      </div>
+
+      <div class="hero-scroll-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+        scroll to explore
       </div>
     </div>
 
@@ -45,14 +51,20 @@
             <div class="icon">
               <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                  fill="currentColor"></path>
+                <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
               </svg>
             </div>
           </a>
         </div>
 
-        <div class="product-grid"></div>
+        <!-- Skeleton placeholders shown while products load -->
+        <div class="product-grid" id="popularGrid">
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+        </div>
       </div>
     </section>
 
@@ -63,25 +75,21 @@
           <div class="reverse-intro-divider" aria-hidden="true"></div>
           <ul class="reverse-intro-chips" aria-label="How reverse marketplace works">
             <li class="reverse-chip">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
                 <path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z" />
               </svg>
               Post what you need
             </li>
             <li class="reverse-chip">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <polyline points="22 12 16 12 14 15 10 15 8 12 2 12" />
-                <path
-                  d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
+                <path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" />
               </svg>
               Sellers send offers
             </li>
             <li class="reverse-chip">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                stroke-linecap="round" stroke-linejoin="round">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
@@ -98,11 +106,27 @@
         <div class="reverse-showcase-header">
           <p class="reverse-section-label">Trending now</p>
           <h2 class="reverse-showcase-title">Popular buy requests</h2>
-          <p class="reverse-showcase-subtitle">See what buyers are actively looking for and jump in with an offer if you
-            have the right item.</p>
+          <p class="reverse-showcase-subtitle">See what buyers are actively looking for and jump in with an offer if you have the right item.</p>
         </div>
 
-        <div class="reverse-grid reverse-showcase-grid"></div>
+        <div class="reverse-grid reverse-showcase-grid" id="reverseGrid">
+          <!-- Skeleton placeholders -->
+          <div class="skeleton-card" style="min-height:180px;border-radius:1rem;padding:22px 20px;">
+            <div class="skeleton-line skeleton-line--short" style="margin-bottom:14px;height:8px;width:30%"></div>
+            <div class="skeleton-line" style="width:80%;height:14px;margin-bottom:8px"></div>
+            <div class="skeleton-line" style="width:55%;height:10px;margin-top:auto"></div>
+          </div>
+          <div class="skeleton-card" style="min-height:180px;border-radius:1rem;padding:22px 20px;">
+            <div class="skeleton-line skeleton-line--short" style="margin-bottom:14px;height:8px;width:40%"></div>
+            <div class="skeleton-line" style="width:70%;height:14px;margin-bottom:8px"></div>
+            <div class="skeleton-line" style="width:45%;height:10px;margin-top:auto"></div>
+          </div>
+          <div class="skeleton-card" style="min-height:180px;border-radius:1rem;padding:22px 20px;">
+            <div class="skeleton-line skeleton-line--short" style="margin-bottom:14px;height:8px;width:35%"></div>
+            <div class="skeleton-line" style="width:75%;height:14px;margin-bottom:8px"></div>
+            <div class="skeleton-line" style="width:50%;height:10px;margin-top:auto"></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -121,22 +145,28 @@
             <div class="icon">
               <svg height="24" width="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                 <path d="M0 0h24v24H0z" fill="none"></path>
-                <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
-                  fill="currentColor"></path>
+                <path d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z" fill="currentColor"></path>
               </svg>
             </div>
           </a>
         </div>
 
-        <div class="other-grid"></div>
+        <div class="other-grid" id="otherGrid">
+          <!-- Skeleton -->
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+          <div class="skeleton-card"><div class="skeleton-img"></div><div class="skeleton-body"><div class="skeleton-line skeleton-line--short"></div><div class="skeleton-line skeleton-line--price"></div></div></div>
+        </div>
       </div>
     </section>
 
     <footer class="mt-4">
       <div class="footer-inner">
         <div class="footer-logo">
-          <img src="{{ url_for('static', filename='images/verka logo small white.svg') }}" alt="VERKA"
-            class="footer-logo-icon-img">
+          <img src="{{ url_for('static', filename='images/verka logo small white.svg') }}" alt="VERKA" class="footer-logo-icon-img">
         </div>
         <div class="footer-links">
           <a href="#">About</a>

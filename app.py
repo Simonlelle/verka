@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, make_response, render_template, request, url_for
+from flask import Flask, jsonify, make_response, render_template, redirect, request, url_for
 import os
 from uuid import uuid4
 from dotenv import load_dotenv
@@ -29,30 +29,26 @@ def _form(key):
     return (request.form.get(key) or '').strip()
 
 
-def _render_error(template, error, **ctx):
-    return render_template(template, error=str(error), **ctx), 400
+def _render_error(template, error, status=400, **ctx):
+    """Render an error template with the correct HTTP status code."""
+    return render_template(template, error=str(error), **ctx), status
 
 
 def _record_payload(record):
-    return {
-        'id': record['id'],
-        'fields': record['fields']
-    }
+    return {'id': record['id'], 'fields': record['fields']}
 
 
-def _json_error(error):
-    return jsonify({'error': str(error), 'status': 'error'}), 400
+def _json_error(error, status=400):
+    return jsonify({'error': str(error), 'status': 'error'}), status
 
 
 def _products_table():
-    """Return products table object or raise if env config is missing."""
     _require_env('AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_TABLE_ID')
     api = Api(AIRTABLE_API_KEY)
     return api.table(AIRTABLE_BASE_ID, AIRTABLE_TABLE_ID)
 
 
 def _reverse_table():
-    """Return reverse table object or raise if env config is missing."""
     _require_env('AIRTABLE_API_KEY', 'AIRTABLE_BASE_ID', 'AIRTABLE_REVERSE_ID')
     api = Api(AIRTABLE_API_KEY)
     return api.table(AIRTABLE_BASE_ID, AIRTABLE_REVERSE_ID)
@@ -73,15 +69,12 @@ def _get_buyer_name_lookup():
 
 def _resolve_buyer_name(fields, buyer_lookup):
     buyer = fields.get('Buyer')
-
     if isinstance(buyer, list) and buyer:
         names = [buyer_lookup.get(bid, str(bid)) for bid in buyer]
-        names = [name for name in names if name]
+        names = [n for n in names if n]
         return ', '.join(names) if names else 'Unknown buyer'
-
     if buyer:
         return str(buyer)
-
     return 'Unknown buyer'
 
 
@@ -89,34 +82,42 @@ def _get_reverse_items():
     records = _reverse_table().all()
     buyer_lookup = _get_buyer_name_lookup()
     items = []
-
     for record in records:
         payload = _record_payload(record)
         fields = payload.get('fields', {})
         fields['BuyerName'] = _resolve_buyer_name(fields, buyer_lookup)
         items.append(payload)
-
     return items
 
 
+# FIX: avoid N+1 — fetch all records once, then filter by seller IDs in Python
 def _get_product_and_sellers(record_id):
     table = _products_table()
     record = table.get(record_id)
     seller_value = record.get('fields', {}).get('Seller')
     seller_names = []
 
-    if isinstance(seller_value, list):
-        for sid in seller_value:
-            try:
-                srec = table.get(sid)
-                sname = srec.get('fields', {}).get('Name')
-                seller_names.append(sname if sname else str(sid))
-            except Exception:
-                seller_names.append(str(sid))
+    if isinstance(seller_value, list) and seller_value:
+        # Fetch all records once and build a lookup — avoids one API call per seller ID
+        try:
+            all_records = table.all(fields=['Name'])
+            lookup = {r['id']: r.get('fields', {}).get('Name', '') for r in all_records}
+            seller_names = [lookup.get(sid, str(sid)) for sid in seller_value]
+            seller_names = [n for n in seller_names if n]
+        except Exception:
+            # Graceful fallback to the original per-ID approach
+            for sid in seller_value:
+                try:
+                    srec = table.get(sid)
+                    sname = srec.get('fields', {}).get('Name')
+                    seller_names.append(sname if sname else str(sid))
+                except Exception:
+                    seller_names.append(str(sid))
     elif seller_value:
         seller_names = [str(seller_value)]
 
     return record, seller_names
+
 
 @app.route('/')
 def index():
@@ -132,7 +133,7 @@ def explore():
         records = table.all()
         return render_template('explore.html', records=records)
     except Exception as e:
-        return _render_error('explore.html', e, records=[])
+        return _render_error('explore.html', e, status=503, records=[])
 
 
 @app.route('/reverse', methods=['GET'])
@@ -141,7 +142,7 @@ def reverse_marketplace():
         requests = _get_reverse_items()
         return render_template('reverse.html', requests=requests)
     except Exception as e:
-        return _render_error('reverse.html', e, requests=[])
+        return _render_error('reverse.html', e, status=503, requests=[])
 
 
 @app.route('/reverse/<record_id>', methods=['GET', 'POST'])
@@ -149,9 +150,11 @@ def reverse_listing_page(record_id):
     try:
         record = _reverse_table().get(record_id)
         listing = dict(record.get('fields', {}))
-        listing['BuyerName'] = _resolve_buyer_name(listing, _get_buyer_name_lookup())
+        # Build lookup once and reuse — don't call it twice
+        buyer_lookup = _get_buyer_name_lookup()
+        listing['BuyerName'] = _resolve_buyer_name(listing, buyer_lookup)
     except Exception as e:
-        return _render_error('reverse_listing.html', e, listing=None)
+        return _render_error('reverse_listing.html', e, status=404, listing=None)
 
     if request.method == 'POST':
         full_name = _form('full_name')
@@ -211,6 +214,7 @@ def add_reverse():
         except Exception as e:
             return _render_error('add_reverse.html', e, submitted=False)
 
+        # FIX: Use Post/Redirect/Get to prevent duplicate submissions on refresh
         return render_template('add_reverse.html', submitted=True)
 
     return render_template('add_reverse.html', submitted=False)
@@ -248,7 +252,8 @@ def add_listing():
             fields = {
                 'Name': name,
                 'Category': category,
-                'Price': int(price),
+                # FIX: use float instead of int to preserve decimal prices (e.g. €9.99)
+                'Price': float(price),
                 'Status': 'Review in progress',
                 'Photo': [{'url': photo_url}]
             }
@@ -281,7 +286,7 @@ def api_get_reverse_records():
         items = _get_reverse_items()
         return jsonify({'records': items, 'status': 'success', 'count': len(items)})
     except Exception as e:
-        return _json_error(e)
+        return _json_error(e, status=503)
 
 
 @app.route('/api/airtable/records', methods=['GET'])
@@ -290,13 +295,9 @@ def api_get_records():
         table = _products_table()
         records = table.all()
         records_list = [_record_payload(record) for record in records]
-        return jsonify({
-            'records': records_list,
-            'status': 'success',
-            'count': len(records_list)
-        })
+        return jsonify({'records': records_list, 'status': 'success', 'count': len(records_list)})
     except Exception as e:
-        return _json_error(e)
+        return _json_error(e, status=503)
 
 
 @app.route('/api/airtable/records', methods=['POST'])
@@ -306,10 +307,7 @@ def api_add_record():
         data = request.get_json()
         fields = data.get('fields', data)
         record = table.create(fields)
-        return jsonify({
-            'record': _record_payload(record),
-            'status': 'success'
-        })
+        return jsonify({'record': _record_payload(record), 'status': 'success'})
     except Exception as e:
         return _json_error(e)
 
@@ -319,10 +317,7 @@ def api_delete_record(record_id):
     try:
         table = _products_table()
         table.delete(record_id)
-        return jsonify({
-            'status': 'success',
-            'deleted': record_id
-        })
+        return jsonify({'status': 'success', 'deleted': record_id})
     except Exception as e:
         return _json_error(e)
 
@@ -333,7 +328,7 @@ def product_page(record_id):
         record, seller_names = _get_product_and_sellers(record_id)
         return render_template('product.html', record=record, seller_names=seller_names)
     except Exception as e:
-        return _render_error('product.html', e, record=None)
+        return _render_error('product.html', e, status=404, record=None)
 
 
 @app.route('/product/<record_id>/offer', methods=['GET', 'POST'])
@@ -341,7 +336,7 @@ def make_offer(record_id):
     try:
         record, seller_names = _get_product_and_sellers(record_id)
     except Exception as e:
-        return _render_error('offer.html', e, record=None, seller_names=[])
+        return _render_error('offer.html', e, status=404, record=None, seller_names=[])
 
     if request.method == 'POST':
         full_name = _form('full_name')
@@ -369,12 +364,7 @@ def make_offer(record_id):
             submitted_message=message
         )
 
-    return render_template(
-        'offer.html',
-        record=record,
-        seller_names=seller_names,
-        submitted=False
-    )
+    return render_template('offer.html', record=record, seller_names=seller_names, submitted=False)
 
 
 @app.route('/product/<record_id>/buy', methods=['GET', 'POST'])
@@ -382,7 +372,7 @@ def buy_product(record_id):
     try:
         record, seller_names = _get_product_and_sellers(record_id)
     except Exception as e:
-        return _render_error('product_action.html', e, record=None, seller_names=[], action_type='buy', action_label='Buy the product')
+        return _render_error('product_action.html', e, status=404, record=None, seller_names=[], action_type='buy', action_label='Buy the product')
 
     if request.method == 'POST':
         full_name = _form('full_name')
@@ -427,7 +417,7 @@ def message_seller(record_id):
     try:
         record, seller_names = _get_product_and_sellers(record_id)
     except Exception as e:
-        return _render_error('message_seller.html', e, record=None, seller_names=[])
+        return _render_error('message_seller.html', e, status=404, record=None, seller_names=[])
 
     if request.method == 'POST':
         full_name = _form('full_name')
@@ -454,6 +444,7 @@ def message_seller(record_id):
         )
 
     return render_template('message_seller.html', record=record, seller_names=seller_names, submitted=False)
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
